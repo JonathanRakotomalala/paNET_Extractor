@@ -1,0 +1,15 @@
+[project]
+name = "PaNETExtractor"
+version = "0.1.0"
+description = "Extract paNET terms from text"
+readme = "README.md" 
+dependencies =  [
+    "fastapi>=0.115.13",
+    "httpx>=0.28.1",
+    "owlready2>=0.48",
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
+    "pytest-mock>=3.14.1",
+    "rapidfuzz>=3.13.0",
+    "transformers[torch]>=4.52.4",
+]
