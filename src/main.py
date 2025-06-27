@@ -1,7 +1,6 @@
-from src.llm.llm import QUERY_1
 from .orchestrator.orchestrator import Orchestrator
 from fastapi import FastAPI, Query, Request
-from pydantic import BaseModel,Field
+from pydantic import BaseModel, Field
 from typing_extensions import Annotated
 from fastapi.responses import HTMLResponse
 from fastapi.openapi.utils import get_openapi
@@ -23,28 +22,33 @@ class TextTechnique(BaseModel):
     inText: str
     inPaNET: Technique
 
+
 class Result(BaseModel):
-    output: list[TextTechnique] = Field(examples= [
-                        {
-                            "inText": "Small-angle scattering",
-                            "InPaNET": {
-                                "technique": {
-                                    "label": "high resolution inelastic neutron scattering",
-                                    "altLabel": [],
-                                    "subClassOf": {
-                                        "PaNET01042": "high energy resolution emission technique",
-                                        "PaNET01245": "inelastic neutron spectroscopy",
-                                    },
-                                }
-                            },
-                        }
-                    ])
-    
+    output: list[TextTechnique] = Field(
+        examples=[
+            {
+                "inText": "Small-angle scattering",
+                "InPaNET": {
+                    "technique": {
+                        "label": "high resolution inelastic neutron scattering",
+                        "altLabel": [],
+                        "subClassOf": {
+                            "PaNET01042": "high energy resolution emission technique",
+                            "PaNET01245": "inelastic neutron spectroscopy",
+                        },
+                    }
+                },
+            }
+        ]
+    )
+
 
 class Message(BaseModel):
     message: str = Field(examples=["Bad Request"])
 
+
 app = FastAPI(docs_url=None, redoc_url=None)
+
 
 @app.get("/doc_elem", include_in_schema=False)
 async def api_documentation(request: Request):
@@ -69,12 +73,9 @@ async def api_documentation(request: Request):
     </html>""")
 
 
-@app.post("/techniques/", responses={200:{"model":Result},400:{"model":Message}})
+@app.post("/techniques/", responses={200: {"model": Result}, 400: {"model": Message}})
 def get_techniques(
-    input: Annotated[
-        str,
-        Query(max_length=500, min_length=2)
-    ],
+    input: Annotated[str, Query(max_length=2500, min_length=2)],
 ) -> Result:
     """Get techniques from the text"""
     return Orchestrator.search(input)
