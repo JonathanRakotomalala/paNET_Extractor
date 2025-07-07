@@ -73,7 +73,7 @@ async def api_documentation(request: Request):
     </html>""")
 
 
-@app.post("/techniques/", responses={200: {"model": Result}, 400: {"descripton": "Bad Request"}, 404:{"model":Message}})
+@app.post("/extract_techniques/", responses={200: {"model": Result}, 400: {"descripton": "Bad Request"}, 404:{"model":Message}})
 def get_techniques(
     input: Annotated[str, Query(max_length=2500, min_length=2)],
 ) -> Result:
