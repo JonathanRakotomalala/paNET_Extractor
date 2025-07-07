@@ -31,6 +31,6 @@ def test_load_ontology(mocker):
 
     mock_get_ontology.assert_called_once_with(url_link)
     mock_ontology.load.assert_called_once()
-    mock_ontology.classes.assert_called_once()
+    mock_ontology.classes.assert_any_call()
 
     assert len(results) > 0

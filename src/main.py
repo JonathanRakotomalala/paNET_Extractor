@@ -44,7 +44,7 @@ class Result(BaseModel):
 
 
 class Message(BaseModel):
-    message: str = Field(examples=["Bad Request"])
+    detail: str = Field(examples=["Error while trying to load ontology"])
 
 
 app = FastAPI(docs_url=None, redoc_url=None)
@@ -73,7 +73,7 @@ async def api_documentation(request: Request):
     </html>""")
 
 
-@app.post("/techniques/", responses={200: {"model": Result}, 400: {"model": Message}})
+@app.post("/techniques/", responses={200: {"model": Result}, 400: {"descripton": "Bad Request"}, 404:{"model":Message}})
 def get_techniques(
     input: Annotated[str, Query(max_length=2500, min_length=2)],
 ) -> Result:
