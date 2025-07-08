@@ -1,5 +1,5 @@
 from .orchestrator.orchestrator import Orchestrator
-from fastapi import FastAPI, Query, Request
+from fastapi import FastAPI, Query, Request,Body
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated
 from fastapi.responses import HTMLResponse
@@ -75,7 +75,7 @@ async def api_documentation(request: Request):
 
 @app.post("/extract_techniques/", responses={200: {"model": Result}, 400: {"descripton": "Bad Request"}, 404:{"model":Message}})
 def get_techniques(
-    input: Annotated[str, Query(max_length=2500, min_length=2)],
+    input: Annotated[str, Query(max_length=2500, min_length=2,example='NiFe-layered double hydroxides (LDHs) are promising electrocatalysts for the oxygen evolution reaction (OER) in alkaline media. Here, operando X-ray diffraction (XRD) and X-ray total scattering are used with Pair Distribution Function (PDF) analysis to investigate the atomic structure of the catalytically active material and follow structural changes under operating conditions. XRD shows an interlayer contraction under applied oxidative potential, which relates to a transition from the α-LDH to the γ-LDH phase. The phase transition is reversible, and the α-LDH structure is recovered at 1.3 VRHE. However, PDF analysis shows an irreversible increase in the stacking disorder under operating conditions, along with a decrease in the LDH sheet size. The analysis thus shows that the operating conditions induce a breakdown of the particles leading to a decrease in crystallite size.') ],
 ) -> Result:
     """Get techniques from the text"""
     return Orchestrator.search(input)
