@@ -30,10 +30,10 @@ DOCUMENT_METADATA_EXTRACTION = textwrap.dedent("""
     
    1. Techniques:
       - ONLY include techniques that are EXPLICITLY mentioned in the text
-      - Use the full technique name EXACTLY as written in the text. Including the acronym if present . Write the technics exactly as it is in the text, keep the exact casing (capitalization) as it appears in the text.
+      - Use the full technique name EXACTLY as written in the text. Including the acronym if present  (like SAXS or XANES) . Write the technics exactly as it is in the text, keep the exact casing (capitalization) as it appears in the text.
       -  If no techniques are mentioned, return an empty list `[]`
       - DO NOT infer techniques from experimental results or sample characterization mentions  
-      - DO NOT combine, merge or mix multiple techniques 
+      - DO NOT combine, merge or mix multiple techniques (example: operando absorption and x-ray diffraction tomography -> [operando absorption, x-ray diffraction tomography])
       - DO NOT include techniques that might typically be used in the context of the given text, but aren't specifically stated
       
 
@@ -58,7 +58,7 @@ QUERY_3 = "Un outillage lithique acheuléen, une riche faune du Pléistocène mo
 class Llm:
     ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")
     pipe = pipeline(
-        "text-generation", model="meta-llama/Llama-3.2-1B-Instruct", token=ACCESS_TOKEN,temperature = 0.65, top_p=0.98,top_k=9
+        "text-generation", model="meta-llama/Llama-3.2-1B-Instruct", token=ACCESS_TOKEN
     )
 
     def llm_run(input: str):

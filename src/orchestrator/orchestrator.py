@@ -3,6 +3,7 @@ from src.matchmapper.matchmapper import MatchMapper
 import json
 from fastapi import HTTPException
 from ..ontology.ontology_import import EmptyOntologyError
+from ..openaire import OpenAire, AbstractImportError
 
 class Orchestrator:
     def search(input: str):
@@ -19,3 +20,15 @@ class Orchestrator:
                     detail="Bad Request",
                     headers={"message": "Bad Request"},
                 )
+    
+    def list_search(doi_list):
+        try :
+            my_list=[]
+            for _,i in doi_list:
+                for j in i:
+                    abstract = OpenAire.get_abstract_from_doi(j)
+                    techniques = Orchestrator.search(abstract)
+                    my_list.append({"doi":j,"abstract":abstract,"techniques":techniques})
+            return {"outputs":my_list}
+        except AbstractImportError as e:
+            raise HTTPException(status_code=404,detail=e.message,headers={"message": e.message})
