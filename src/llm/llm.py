@@ -58,7 +58,7 @@ QUERY_3 = "Un outillage lithique acheuléen, une riche faune du Pléistocène mo
 class Llm:
     ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")
     pipe = pipeline(
-        "text-generation", model="meta-llama/Llama-3.2-1B-Instruct", token=ACCESS_TOKEN,temperature = 0.65, top_p=0.95,top_k=9
+        "text-generation", model="meta-llama/Llama-3.2-1B-Instruct", token=ACCESS_TOKEN,temperature = 0.65, top_p=0.98,top_k=9
     )
 
     def llm_run(input: str):
