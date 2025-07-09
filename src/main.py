@@ -1,5 +1,5 @@
 from .orchestrator.orchestrator import Orchestrator
-from fastapi import FastAPI, Query, Request,Body,Header,HTTPException
+from fastapi import FastAPI, Query, Request,Body,HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated
@@ -96,9 +96,12 @@ def get_techniques(request: Request,
         return Orchestrator.search(input)
 
 @app.post("/dois_to_techniques/",responses={404:{"model":Message}},response_class=JSONResponse)
-def get_techniques_from_dois(dois:Annotated[Dois,Body(example = {"dois":["10.1007/s00396-004-1145-9","10.1002/smll.202411211","10.3406/bspf.2011.14065"]})])->DoiTechResponses:
+def get_techniques_from_dois(request:Request,dois:Annotated[Dois,Body(example = {"dois":["10.1007/s00396-004-1145-9","10.1002/smll.202411211","10.3406/bspf.2011.14065"]})])->DoiTechResponses:
     """Get techniques from DOIs"""
-    return Orchestrator.list_search(dois)
+    if "application/json" not in request.headers.get("accept",""):
+        raise HTTPException(status_code=406,detail = "Not accepted must be an application/json")
+    else:
+        return Orchestrator.list_search(dois)
 
 
 def custom_openapi():
