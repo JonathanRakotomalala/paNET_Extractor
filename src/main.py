@@ -1,5 +1,6 @@
 from .orchestrator.orchestrator import Orchestrator
-from fastapi import FastAPI, Query, Request,Body
+from fastapi import FastAPI, Query, Request,Body,Header,HTTPException
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated
 from fastapi.responses import HTMLResponse
@@ -84,14 +85,17 @@ async def api_documentation(request: Request):
     </html>""")
 
 
-@app.post("/extract_techniques/", responses={200: {"model": Result}, 400: {"descripton": "Bad Request","model":BadRequestMessage}, 404:{"model":Message}})
-def get_techniques(
+@app.post("/extract_techniques/", responses={200: {"model": Result}, 400: {"descripton": "Bad Request","model":BadRequestMessage}, 404:{"model":Message}},response_class=JSONResponse)
+def get_techniques(request: Request,
     input: Annotated[str, Query(max_length=2500, min_length=2,example='NiFe-layered double hydroxides (LDHs) are promising electrocatalysts for the oxygen evolution reaction (OER) in alkaline media. Here, operando X-ray diffraction (XRD) and X-ray total scattering are used with Pair Distribution Function (PDF) analysis to investigate the atomic structure of the catalytically active material and follow structural changes under operating conditions. XRD shows an interlayer contraction under applied oxidative potential, which relates to a transition from the α-LDH to the γ-LDH phase. The phase transition is reversible, and the α-LDH structure is recovered at 1.3 VRHE. However, PDF analysis shows an irreversible increase in the stacking disorder under operating conditions, along with a decrease in the LDH sheet size. The analysis thus shows that the operating conditions induce a breakdown of the particles leading to a decrease in crystallite size.') ],
 ) -> Result:
     """Get techniques from raw text"""
-    return Orchestrator.search(input)
+    if "application/json" not in request.headers.get("accept",""):
+        raise HTTPException(status_code=406,detail = "Not accepted must be an application/json")
+    else:
+        return Orchestrator.search(input)
 
-@app.post("/dois_to_techniques/",responses={404:{"model":Message}})
+@app.post("/dois_to_techniques/",responses={404:{"model":Message}},response_class=JSONResponse)
 def get_techniques_from_dois(dois:Annotated[Dois,Body(example = {"dois":["10.1007/s00396-004-1145-9","10.1002/smll.202411211","10.3406/bspf.2011.14065"]})])->DoiTechResponses:
     """Get techniques from DOIs"""
     return Orchestrator.list_search(dois)
