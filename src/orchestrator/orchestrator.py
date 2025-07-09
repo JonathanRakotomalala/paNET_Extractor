@@ -4,6 +4,8 @@ import json
 from fastapi import HTTPException
 from ..ontology.ontology_import import EmptyOntologyError
 from ..openaire import OpenAire, AbstractImportError
+import time
+
 
 class Orchestrator:
     def search(input: str):
