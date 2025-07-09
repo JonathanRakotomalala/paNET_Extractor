@@ -3,7 +3,7 @@ from src.matchmapper.matchmapper import MatchMapper
 import json
 from fastapi import HTTPException
 from ..ontology.ontology_import import EmptyOntologyError
-from ..openaire import OpenAire, AbstractImportError
+from ..openaire import OpenAire, AbstractImportError,RateLimitError
 
 
 class Orchestrator:
@@ -31,6 +31,9 @@ class Orchestrator:
                     techniques = Orchestrator.search(abstract)
                     my_list.append({"doi":j,"abstract":abstract,"techniques":techniques})
             return {"outputs":my_list}
-        except AbstractImportError as e:
-            raise HTTPException(status_code=404,detail=e.message,headers={"message": e.message})
+        except (AbstractImportError,RateLimitError) as e:
+            if isinstance(e,AbstractImportError):
+                raise HTTPException(status_code=404,detail=e.message,headers={"message": e.message})
+            else:
+                raise HTTPException(status_code=429,detail={"error":"too many requests"},headers={"Retry-After":e.retry})
         

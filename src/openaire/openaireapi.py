@@ -1,6 +1,6 @@
 import requests
 import time
-
+from fastapi import HTTPException
 
 
 
@@ -12,18 +12,28 @@ class AbstractImportError(Exception):
 
     def __str__(self):
         return f'{self.message}'
+    
+class RateLimitError(Exception):
+    def __init__(self,retry,message="OpenAire Error"):
+        self.retry = retry
+        self.message = message 
+        super().__init__(self.message)
+    def __str__(self):
+        return f'{self.message+self.retry}'
 
 class OpenAire:
     def get_abstract_from_doi(doi):
         url = "https://api.openaire.eu/graph/v1/researchProducts?pid="+doi
 
         response = requests.get(url)
+        time_start = time.localtime()
         if response.status_code == 200 and response.json()['header']['numFound']>0:
             return response.json()['results'][0]['descriptions'][0]
         elif response.status_code ==429: 
-            print("Wait a moment...")
-            time.sleep(60)
-            OpenAire.get_abstract_from_doi(doi)
+            #waiting time  = difference of the time of the request and the time of the request rounded to the upper hour
+            waiting_time = (time_start.tm_min * 60 + time_start.tm_sec) - time_start.tm_sec
+            print(waiting_time)
+            raise RateLimitError("Too many requests, retry after {waiting_time}")
         else :
              raise AbstractImportError("Unable to extract abstract from DOI")
         
