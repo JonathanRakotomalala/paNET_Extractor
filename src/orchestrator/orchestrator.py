@@ -4,7 +4,6 @@ import json
 from fastapi import HTTPException
 from ..ontology.ontology_import import EmptyOntologyError
 from ..openaire import OpenAire, AbstractImportError
-import time
 
 
 class Orchestrator:
@@ -34,3 +33,4 @@ class Orchestrator:
             return {"outputs":my_list}
         except AbstractImportError as e:
             raise HTTPException(status_code=404,detail=e.message,headers={"message": e.message})
+        

@@ -1,4 +1,10 @@
 import requests
+import time
+
+
+
+
+
 class AbstractImportError(Exception):
     def __init__(self,message="OpenAire Error"):
         self.message = message 
@@ -15,6 +21,11 @@ class OpenAire:
         if response.status_code == 200 and response.json()['header']['numFound']>0:
             return response.json()['results'][0]['descriptions'][0]
         elif response.status_code ==429: 
-            raise AbstractImportError("Wait N times")
+            print("Wait a moment...")
+            time.sleep(60)
+            OpenAire.get_abstract_from_doi(doi)
         else :
              raise AbstractImportError("Unable to extract abstract from DOI")
+        
+
+

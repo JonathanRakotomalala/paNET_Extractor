@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 from src.main import app
-
+from src.openaire import OpenAire
 
 
 
@@ -27,3 +27,13 @@ def test_invalid_accept_header():
             headers={"Content-type": "application/json", "Accept": "application/xhtml"},
         )
         assert response.status_code == 406
+
+def test_rate_time_limit(mocker):
+    mock = mocker.Mock()
+    mock.status_code = 429
+    mock.headers = {"x-rateLimit-reset":'2'}
+    mocker.patch("requests.get",return_value = mock)
+
+    with mocker.patch('time.sleep',return_value=None):
+        result = OpenAire.get_abstract_from_doi("10.1007/s00396-004-1145-9")
+    assert result is None
