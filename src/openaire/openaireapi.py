@@ -1,5 +1,6 @@
 
 import time
+import os
 
 
 
@@ -22,10 +23,18 @@ class RateLimitError(Exception):
 
 class OpenAire:
     import requests
+    OPEN_AIRE_REFRESH_ACCESS_TOKEN = os.environ.get("OPEN_AIRE_REFRESH_ACCESS_TOKEN")
+    print(OPEN_AIRE_REFRESH_ACCESS_TOKEN)
+    response_token = requests.get("https://services.openaire.eu/uoa-user-management/api/users/getAccessToken?refreshToken="+OPEN_AIRE_REFRESH_ACCESS_TOKEN)
+    print(response_token.json())
+    if response_token.status_code == 200:
+        TOKEN = response_token.json()["access_token"]
+    else:
+        raise AbstractImportError("Invalid OpenAire Access Token")
     def get_abstract_from_doi(doi):
-        url = "https://api.openaire.eu/graph/v1/researchProducts?pid="+doi
+        url_link = "https://api.openaire.eu/graph/v1/researchProducts?pid="+doi
 
-        response = OpenAire.requests.get(url,headers={"User-Agent":"PaNetExtractor/1.0.0 (jonathan.rakotomalala@esrf.fr)"})
+        response = OpenAire.requests.get(url_link,headers={"User-Agent":"PaNetExtractor/1.0.0 (jonathan.rakotomalala@esrf.fr)"},auth = "Bearer {OpenAire.TOKEN}")
         time_start = time.localtime()
         if response.status_code == 200 and response.json()['header']['numFound']>0:
             return response.json()['results'][0]['descriptions'][0]
