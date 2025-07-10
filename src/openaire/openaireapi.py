@@ -1,6 +1,5 @@
 
 import time
-from fastapi import HTTPException
 
 
 
@@ -33,7 +32,7 @@ class OpenAire:
         elif response.status_code ==429: 
             #waiting time  = difference of the time of the request and the time of the request rounded to the upper hour
             waiting_time = (time_start.tm_min * 60 + time_start.tm_sec) - time_start.tm_sec
-            raise RateLimitError("Too many requests, retry after {waiting_time} seconds")
+            raise RateLimitError("Too many requests, retry after "+str(waiting_time)+" seconds")
         else :
              raise AbstractImportError("Unable to extract abstract from DOI")
         

@@ -2,8 +2,6 @@ from fastapi.testclient import TestClient
 from src.main import app
 from unittest.mock import Mock
 import pytest
-from fastapi import HTTPException
-from src.openaire import OpenAire
 
 def test_technic_working():
     with TestClient(app) as client:
