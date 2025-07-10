@@ -36,7 +36,7 @@ class Orchestrator:
             if isinstance(e,AbstractImportError):
                 raise HTTPException(status_code=404,detail=e.message,headers={"message": e.message})
             else:
-                raise HTTPException(status_code=429,detail={"error":e.message},headers={"Retry-After":e.retry})
-        
+                raise HTTPException(status_code=429,detail={"error":e.message},headers={"Retry-After":str(e.retry)})
+
     def evaluate():
         ServiceEvaluation.evaluate_service()
