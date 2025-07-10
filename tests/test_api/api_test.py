@@ -35,7 +35,7 @@ def mock_rate_limit_error(mocker):
     mock_response = Mock()
     mock_response.status_code = 429
     mock_response.headers = {"Retry-After": "2"}
-    mock_response.json.return_value = {"error": "Too many requests,retry later"}
+    mock_response.json.return_value = {"error": "Too many requests"}
 
 
     mocker.patch("src.openaire.openaireapi.OpenAire.requests.get", return_value=mock_response)

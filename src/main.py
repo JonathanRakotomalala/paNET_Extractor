@@ -49,6 +49,12 @@ class Message(BaseModel):
 class BadRequestMessage(BaseModel):
     detail: str = Field(examples=["Bad request"])
 
+class CannotAcceptMesssage(BaseModel):
+    detail: str = Field(examples=["Not acceoted must be an application/json"])
+
+class RateLimitMessage(BaseModel):
+    detail: str = Field(examples=["Too many requests"])
+
 class Dois(BaseModel):
     dois:list[str]
 
@@ -86,7 +92,7 @@ async def api_documentation(request: Request):
     </html>""")
 
 
-@app.post("/extract_techniques/", responses={200: {"model": Result}, 400: {"descripton": "Bad Request","model":BadRequestMessage}, 404:{"model":Message}},response_class=JSONResponse)
+@app.post("/extract_techniques/", responses={200: {"model": Result}, 400: {"descripton": "Bad Request","model":BadRequestMessage}, 404:{"model":Message},406:{"model":CannotAcceptMesssage}},response_class=JSONResponse)
 def get_techniques(request: Request,
     input: Annotated[str, Query(max_length=2500, min_length=2,example='NiFe-layered double hydroxides (LDHs) are promising electrocatalysts for the oxygen evolution reaction (OER) in alkaline media. Here, operando X-ray diffraction (XRD) and X-ray total scattering are used with Pair Distribution Function (PDF) analysis to investigate the atomic structure of the catalytically active material and follow structural changes under operating conditions. XRD shows an interlayer contraction under applied oxidative potential, which relates to a transition from the α-LDH to the γ-LDH phase. The phase transition is reversible, and the α-LDH structure is recovered at 1.3 VRHE. However, PDF analysis shows an irreversible increase in the stacking disorder under operating conditions, along with a decrease in the LDH sheet size. The analysis thus shows that the operating conditions induce a breakdown of the particles leading to a decrease in crystallite size.') ],
 ) -> Result:
@@ -96,7 +102,7 @@ def get_techniques(request: Request,
     else:
         return Orchestrator.search(input)
 
-@app.post("/dois_to_techniques/",responses={404:{"model":Message}},response_class=JSONResponse)
+@app.post("/dois_to_techniques/",responses={404:{"model":Message},406:{"model":CannotAcceptMesssage},429:{}},response_class=JSONResponse)
 def get_techniques_from_dois(request:Request,dois:Annotated[Dois,Body(example = {"dois":["10.1007/s00396-004-1145-9","10.1002/smll.202411211","10.3406/bspf.2011.14065"]})])->DoiTechResponses:
     """Get techniques from DOIs"""
     if "application/json" not in request.headers.get("accept",""):
@@ -120,3 +126,6 @@ def custom_openapi():
 
 
 app.openapi = custom_openapi
+
+if __name__ == "__main__":
+    Orchestrator.evaluate()
