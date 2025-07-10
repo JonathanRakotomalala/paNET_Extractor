@@ -25,7 +25,7 @@ class OpenAire:
     def get_abstract_from_doi(doi):
         url = "https://api.openaire.eu/graph/v1/researchProducts?pid="+doi
 
-        response = OpenAire.requests.get(url)
+        response = OpenAire.requests.get(url,headers={"User-Agent":"PaNetExtractor/1.0.0 (jonathan.rakotomalala@esrf.fr)"})
         time_start = time.localtime()
         if response.status_code == 200 and response.json()['header']['numFound']>0:
             return response.json()['results'][0]['descriptions'][0]
