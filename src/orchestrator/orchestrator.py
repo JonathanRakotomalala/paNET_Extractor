@@ -4,6 +4,7 @@ import json
 from fastapi import HTTPException
 from ..ontology.ontology_import import EmptyOntologyError
 from ..openaire import OpenAire, AbstractImportError,RateLimitError
+from src.service_evaluation.service_evaluation import ServiceEvaluation
 
 
 class Orchestrator:
@@ -35,5 +36,7 @@ class Orchestrator:
             if isinstance(e,AbstractImportError):
                 raise HTTPException(status_code=404,detail=e.message,headers={"message": e.message})
             else:
-                raise HTTPException(status_code=429,detail={"error":"too many requests"},headers={"Retry-After":e.retry})
+                raise HTTPException(status_code=429,detail={e.message},headers={"Retry-After":e.retry})
         
+    def evaluate():
+        ServiceEvaluation.evaluate_service()
