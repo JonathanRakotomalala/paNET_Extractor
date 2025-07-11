@@ -81,8 +81,3 @@ class Orchestrator:
                     headers={"Retry-After": str(e.retry)},
                 )
 
-    async def evaluate():
-        """
-            evaluate the service
-        """
-        await ServiceEvaluation.evaluate_service()
