@@ -5,9 +5,13 @@ from fastapi import HTTPException
 from ..ontology.ontology_import import EmptyOntologyError
 from ..openaire import OpenAire, AbstractImportError, RateLimitError
 from ..service_evaluation.service_evaluation import ServiceEvaluation
+import time
+import math
 
 
 class Orchestrator:
+    time_start = None
+    
     def search(input: str):
         """
             Search the techniques in the text and map them to those in paNET
@@ -51,29 +55,29 @@ class Orchestrator:
                 HTTPException: If failed to get the abstract or reached request rate limit
         """
         try:
-            my_list = []
-            for _, i in doi_list:
-                for j in i:
-                    abstract = OpenAire.get_abstract_from_doi(j)
-                    techniques = Orchestrator.search(abstract)
-                    my_list.append(
-                        {"doi": j, "abstract": abstract, "techniques": techniques}
-                    )
-            return {"outputs": my_list}
+            print(Orchestrator.time_start)
+            if Orchestrator.time_start is None or Orchestrator.time_start<=time.time():
+                my_list = []
+                for _, i in doi_list:
+                    for j in i:
+                        abstract = OpenAire.get_abstract_from_doi(j)
+                        techniques = Orchestrator.search(abstract)
+                        my_list.append(
+                            {"doi": j, "abstract": abstract, "techniques": techniques}
+                        )
+                return {"outputs": my_list}
+            else:
+                raise RateLimitError(str(math.ceil(Orchestrator.time_start-time.time())))
         except (AbstractImportError, RateLimitError) as e:
             if isinstance(e, AbstractImportError):
                 raise HTTPException(
                     status_code=404, detail=e.message, headers={"message": e.message}
                 )
             else:
+                Orchestrator.time_start = time.time()+float(e.retry)
                 raise HTTPException(
                     status_code=429,
                     detail={"error": e.message},
                     headers={"Retry-After": str(e.retry)},
                 )
 
-    async def evaluate():
-        """
-            evaluate the service
-        """
-        await ServiceEvaluation.evaluate_service()

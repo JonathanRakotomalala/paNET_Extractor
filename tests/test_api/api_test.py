@@ -2,6 +2,7 @@ from fastapi.testclient import TestClient
 from src.main import app
 from unittest.mock import Mock
 import pytest
+import time
 
 def test_technic_working():
     with TestClient(app) as client:
@@ -13,7 +14,7 @@ def test_technic_working():
         assert response.status_code == 200
 
 
-def test_too_short():
+def test_input_too_short():
     with TestClient(app) as client:
         response = client.post("http://127.0.0.1:8000/extract_techniques/?input=a")
         assert response.status_code == 422
@@ -51,3 +52,18 @@ def test_rate_time_limit(mock_rate_limit_error):
             headers={"Content-type": "application/json", "Accept": "application/json"},
         )
         assert response.status_code == 429
+
+def test_rate_time_limit_and_retried_before_given_time(mock_rate_limit_error):
+
+    with TestClient(app) as client:
+        response = client.post(
+            url="http://127.0.0.1:8000/dois_to_techniques/",json={"dois":["12345678910"]},
+            headers={"Content-type": "application/json", "Accept": "application/json"},
+        )
+        time.sleep(1)
+        response = client.post(
+            url="http://127.0.0.1:8000/dois_to_techniques/",json={"dois":["12345678910"]},
+            headers={"Content-type": "application/json", "Accept": "application/json"},
+        )
+        assert response.status_code == 429
+        assert response.headers.get("Retry-After")==str(1)

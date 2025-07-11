@@ -2,7 +2,7 @@
 import time
 import os
 
-
+time_start = None
 
 
 class AbstractImportError(Exception):
@@ -50,13 +50,17 @@ class OpenAire:
         url_link = "https://api.openaire.eu/graph/v1/researchProducts?pid="+doi
 
         response = OpenAire.requests.get(url_link,headers={"Authorization":"Bearer "+OpenAire.TOKEN,"User-Agent":"PaNetExtractor/1.0.0 (jonathan.rakotomalala@esrf.fr)"})
-        time_start = time.localtime()
+        time_start = time.time()
 
         if response.status_code == 200 and response.json()['header']['numFound']>0:
             return response.json()['results'][0]['descriptions'][0]
         elif response.status_code ==429: 
-            #waiting time  = difference of the time of the request and the time of the request rounded to the upper hour
-            waiting_time = (time_start.tm_min * 60 + time_start.tm_sec) - time_start.tm_sec
+            
+            if "Retry-After" not in response.headers:
+                #waiting time  = difference of the time of the request and the time of the request rounded to the upper hour
+                waiting_time = (time_start+3600) - time_start
+            else:
+                waiting_time = int(response.headers["Retry-After"])
             raise RateLimitError(waiting_time,"Too many requests")
         else :
              print(response.status_code)
