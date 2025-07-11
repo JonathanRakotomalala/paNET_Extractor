@@ -4,7 +4,6 @@ import json
 from fastapi import HTTPException
 from ..ontology.ontology_import import EmptyOntologyError
 from ..openaire import OpenAire, AbstractImportError, RateLimitError
-from ..service_evaluation.service_evaluation import ServiceEvaluation
 import time
 import math
 
