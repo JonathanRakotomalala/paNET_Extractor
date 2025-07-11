@@ -34,3 +34,9 @@ def test_load_ontology(mocker):
     mock_ontology.classes.assert_any_call()
 
     assert len(results) > 0
+
+# def test_file_path_dont_exist():
+
+# def test_failed_to_load_ontology():
+
+# def test_ontology_empty():
