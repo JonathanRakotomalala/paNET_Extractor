@@ -10,7 +10,14 @@ class EmptyOntologyError(Exception):
     
 class Ontology:
     def getting_ontology():
-        """get the ontology from local or from internet return error if invalid link or path"""
+        """import the ontology from local or from internet return error if invalid link or path
+
+            Returns:
+                an ontology (A generator)
+
+            Raises:
+                EmptyOntologyError: if the pathfile/url is wrong or failed to get the ontology
+        """
         ontology = owlready2.get_ontology(
             "https://data.bioontology.org/ontologies/PANET/submissions/26/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb"
         )

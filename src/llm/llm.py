@@ -65,7 +65,6 @@ class Llm:
         """Download or Load the model locally then make an infering
 
         Args:
-           preprompt a string, preprompt to tell the llm how to acts
            input a string, the user's text
         Returns:
            String of a json containing the techniques

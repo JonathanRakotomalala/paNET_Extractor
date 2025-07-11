@@ -32,6 +32,21 @@ class OpenAire:
         raise AbstractImportError("Invalid OpenAire Access Token")
     
     def get_abstract_from_doi(doi):
+        """
+            get the abstract with openaire's api 
+
+            Args:
+                doi: a string that represent the digital object identifier
+
+            Returns: 
+                A string, the abstract of the publication
+
+            Raise:
+                RateLimitError: If the requests limit of openaire api is reached
+                AbstractImportError: If failed to get the abstract
+
+
+        """
         url_link = "https://api.openaire.eu/graph/v1/researchProducts?pid="+doi
 
         response = OpenAire.requests.get(url_link,headers={"Authorization":"Bearer "+OpenAire.TOKEN,"User-Agent":"PaNetExtractor/1.0.0 (jonathan.rakotomalala@esrf.fr)"})

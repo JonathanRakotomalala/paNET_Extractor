@@ -2,7 +2,7 @@ from ..levenshtein import get_label_distance
 from ..levenshtein import get_altlabels_distances
 from ..ontology.ontology_import import Ontology
 
-MAXIMUM = 2147483647
+MAXIMUM_INTEGER = 2147483647
 
 
 class MatchMapper:
@@ -17,7 +17,7 @@ class MatchMapper:
             the term that have the highest proximity or None
 
         """
-        minimum = MAXIMUM
+        minimum = MAXIMUM_INTEGER
         levenshtein_distance_found = minimum
         output = {"technique": None, "distance": None}
         is_upper_case = input.isupper()
@@ -72,6 +72,13 @@ class MatchMapper:
         return {"ten first": nearest_technics}
 
     def map_to_panet(my_json):
+        """
+            Map the techniques to the paNET ontology
+            Args : 
+                my_json a json 
+            Returns :
+                a list of the technics in the json and it nearest terms in paNET
+        """
         my_ontology = Ontology.getting_ontology()
         my_list = []
 

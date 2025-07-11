@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from typing_extensions import Annotated
 from fastapi.responses import HTMLResponse
 from fastapi.openapi.utils import get_openapi
+import asyncio
 
 
 
@@ -128,4 +129,4 @@ def custom_openapi():
 app.openapi = custom_openapi
 
 if __name__ == "__main__":
-    Orchestrator.evaluate()
+    asyncio.run(Orchestrator.evaluate())

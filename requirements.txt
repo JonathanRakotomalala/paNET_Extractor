@@ -1,8 +1,0 @@
-rapidfuzz
-pytest
-pytest-cov
-pytest-mock
-fastapi
-httpx
-owlready2
-transformers[torch]
