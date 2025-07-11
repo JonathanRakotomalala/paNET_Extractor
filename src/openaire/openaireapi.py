@@ -53,7 +53,7 @@ class OpenAire:
         time_start = time.time()
 
         if response.status_code == 200 and response.json()['header']['numFound']>0:
-            return response.json()['results'][0]['descriptions'][0]
+            return response
         elif response.status_code ==429: 
             
             if "Retry-After" not in response.headers:

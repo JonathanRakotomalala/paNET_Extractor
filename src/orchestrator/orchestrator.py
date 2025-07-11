@@ -59,7 +59,8 @@ class Orchestrator:
                 my_list = []
                 for _, i in doi_list:
                     for j in i:
-                        abstract = OpenAire.get_abstract_from_doi(j)
+                        call_openaire = OpenAire.get_abstract_from_doi(j)
+                        abstract = call_openaire.json()['results'][0]['descriptions'][0]
                         techniques = Orchestrator.search(abstract)
                         my_list.append(
                             {"doi": j, "abstract": abstract, "techniques": techniques}
