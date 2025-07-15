@@ -55,16 +55,21 @@ class Orchestrator:
         """
         try:
             print(Orchestrator.time_start)
+
             if Orchestrator.time_start is None or Orchestrator.time_start <= time.time():
                 my_list = []
                 for _, i in doi_list:
+
                     for j in i:
-                        call_openaire = OpenAire.get_abstract_from_doi(j)
-                        abstract = call_openaire.json()['results'][0]['descriptions'][0]
-                        techniques = Orchestrator.search(abstract)
+                        result = OpenAire.get_abstract_from_doi(j)
+                        if result == "No abstract available":
+                            techniques = {"output":[]}
+                        else:
+                            techniques = Orchestrator.search(result)
                         my_list.append(
-                            {"doi": j, "abstract": abstract, "techniques": techniques}
+                            {"doi": j, "abstract": result, "techniques": techniques}
                         )
+
                 return {"outputs": my_list}
             else:
                 raise RateLimitError(str(math.ceil(Orchestrator.time_start-time.time())))

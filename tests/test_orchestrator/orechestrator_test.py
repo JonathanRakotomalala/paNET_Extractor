@@ -5,7 +5,6 @@ from src.ontology import EmptyOntologyError
 from src.openaire import OpenAire
 import pytest
 from fastapi import HTTPException
-import json
 
 
 def test_orchestrator_search_from_text_success(mocker):

@@ -3,16 +3,16 @@ import pytest
 from unittest.mock import Mock
 
 def test_found_from_doi():
-    response = OpenAire.get_abstract_from_doi("10.1038/s41563-023-01669-z")
+    response = OpenAire.call_open_aire("10.1038/s41563-023-01669-z")
     assert response.json()['header']['numFound'] == 1
     assert response.json()['results'][0]['mainTitle'] == "Unit-cell-thick zeolitic imidazolate framework films for membrane application"
 
 def test_nothing_found_from_doi():
     with pytest.raises(AbstractImportError):
-        OpenAire.get_abstract_from_doi("10.4466/123s132111")
+        OpenAire.call_open_aire("10.4466/123s132111")
 
 def test_input_a_void_doi_get_all_products():
-    response = OpenAire.get_abstract_from_doi("")
+    response = OpenAire.call_open_aire("")
     assert response.json()['header']['numFound'] >1
 
 @pytest.fixture
@@ -45,10 +45,10 @@ def mock_rate_limit_error_2(mocker):
 
 def test_rate_limit_error_retry_after(mock_rate_limit_error):
     with pytest.raises(RateLimitError):
-        OpenAire.get_abstract_from_doi("10.1038/s41563-023-01669-z")
+        OpenAire.call_open_aire("10.1038/s41563-023-01669-z")
 
 def test_rate_limit_error_without_retry_after(mock_rate_limit_error_2):
     with pytest.raises(RateLimitError):
-        OpenAire.get_abstract_from_doi("10.1038/s41563-023-01669-z")
+        OpenAire.call_open_aire("10.1038/s41563-023-01669-z")
 
 #def test_invalid_access_token

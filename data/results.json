@@ -1,1 +1,367 @@
-{"outputs": [{"doi": "10.1002/adma.202419606", "abstract": "<jats:title>Abstract</jats:title><jats:p>The edge states (ES) in two\u2010dimensional (2D) hybrid lead halide perovskites (LHPs) exhibit distinct electronic characteristics, including lower energy and longer lifetimes compared to the interior states (IS). Though the ES of these 2D LHPs show prospect of facilitating photovoltaic and optoelectronic effects, the underlying mechanism remains elusive. Here, the occurrence of ES in a family of 2D A<jats:sub>2</jats:sub>PbBr<jats:sub>4</jats:sub> (A = organic amine cation) LHPs is attributed to the Rashba/Dresselhaus (RD) spin splitting induced\u00a0by local structural reorganization on the crystal edge. The experimental and theoretical characterizations reveal that the local structure on the crystal edge is significantly strained, which leads to considerable out\u2010of\u2010plane distortion of adjacent PbBr<jats:sub>6</jats:sub> octahedra, local loss of inversion symmetry and therefore spin\u2010splitting energy required for the formation of ES. This findings contribute fresh perspectives to the fundamental comprehension of the RD effect, extending the boundaries of spintronics and opening promising pathways for the conceptualization and refinement of devices centered on ES.</jats:p>", "techniques": {"output": [{"inText": "XANES", "inPaNET": {"technique": {"label": "x-ray absorption near edge structure", "altLabel": ["NEXAFS", "XANES"], "subClassOf": {"PaNET00402": "obtain electronic ground state properties", "PaNET01197": "x-ray absorption fine structure"}, "definition1": "", "definition2": "https://en.wikipedia.org/wiki/X-ray_absorption_near_edge_structure"}}}, {"inText": "SAXS", "inPaNET": {"technique": {"label": "small angle x-ray scattering", "altLabel": ["SAXS"], "subClassOf": {"PaNET01012": "x-ray probe", "PaNET01124": "small angle scattering"}, "definition1": "", "definition2": "https://en.wikipedia.org/wiki/Small-angle_X-ray_scattering"}}}]}}]}
+{
+    "outputs": [
+        {
+            "doi": "10.1038/s41598-025-89431-0",
+            "abstract": "<jats:title>Abstract</jats:title>           <jats:p>Multi-scale X-ray phase contrast tomography (XPCT) enables three-dimensional (3D), non-destructive imaging of intact small animal cochlea and apical cochlear turns. Here we report on post-mortem imaging of excised non-human primate and rodent cochleae at different <jats:inline-formula>               <jats:tex-math>$${\\upmu }$$</jats:tex-math>             </jats:inline-formula>-CT and nano-CT synchrotron instruments. We explore different sample embeddings, stainings and imaging regimes. Under optimized conditions of sample preparation, instrumentation, imaging protocol, and phase retrieval, high image quality and detail level can be achieved in 3D reconstructions. The showcased instrumentation and imaging protocols along with the reconstucted volumes can serve as benchmarks and reference for multi-scale microanatomy and 3D histology. The provided benchmarks and imaging protocols of this work cover a wide range of scales and are intended as augmented imaging tools for auditory research.</jats:p>",
+            "techniques": {
+                "output": [
+                    {
+                        "inText": "XANES",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "x-ray absorption near edge structure",
+                                "altLabel": [
+                                    "NEXAFS",
+                                    "XANES"
+                                ],
+                                "subClassOf": {
+                                    "PaNET00402": "obtain electronic ground state properties",
+                                    "PaNET01197": "x-ray absorption fine structure"
+                                },
+                                "definition1": "",
+                                "definition2": "https://en.wikipedia.org/wiki/X-ray_absorption_near_edge_structure"
+                            }
+                        }
+                    },
+                    {
+                        "inText": "SAXS",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "small angle x-ray scattering",
+                                "altLabel": [
+                                    "SAXS"
+                                ],
+                                "subClassOf": {
+                                    "PaNET01012": "x-ray probe",
+                                    "PaNET01124": "small angle scattering"
+                                },
+                                "definition1": "",
+                                "definition2": "https://en.wikipedia.org/wiki/Small-angle_X-ray_scattering"
+                            }
+                        }
+                    },
+                    {
+                        "inText": "XPCT",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "x-ray photon correlation spectroscopy",
+                                "altLabel": [
+                                    "XPCS"
+                                ],
+                                "subClassOf": {
+                                    "PaNET01012": "x-ray probe",
+                                    "PaNET01117": "photon correlation spectroscopy"
+                                },
+                                "definition1": "",
+                                "definition2": "https://en.wikipedia.org/wiki/X-ray_Photon_Correlation_Spectroscopy"
+                            }
+                        }
+                    },
+                    {
+                        "inText": "nano-CT",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "nano angle resolved photoemission spectroscopy",
+                                "altLabel": [
+                                    "nano ARPES"
+                                ],
+                                "subClassOf": {
+                                    "PaNET01004": "nanofocussed probe",
+                                    "PaNET01291": "scanning angle resolved photoemission spectromicroscopy"
+                                },
+                                "definition1": "",
+                                "definition2": ""
+                            }
+                        }
+                    },
+                    {
+                        "inText": "in vivo",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "ion imaging",
+                                "altLabel": [],
+                                "subClassOf": {
+                                    "PaNET00100": "photon probe",
+                                    "PaNET01048": "ion emission technique",
+                                    "PaNET01058": "versus emission momentum"
+                                },
+                                "definition1": "",
+                                "definition2": ""
+                            }
+                        }
+                    },
+                    {
+                        "inText": "in vitro",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "linear dichroism",
+                                "altLabel": [
+                                    "LD"
+                                ],
+                                "subClassOf": {
+                                    "PaNET00202": "absorption technique",
+                                    "PaNET01061": "versus photon linear polarization",
+                                    "PaNET01090": "dichroism"
+                                },
+                                "definition1": "",
+                                "definition2": "https://en.wikipedia.org/wiki/Linear_dichroism"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "doi": "10.1126/sciadv.adu7247",
+            "abstract": "<jats:p>             Animal-like cryptochromes are photoreceptors that control circadian rhythm and signaling in many eukaryotes. Transient photoreduction of the cryptochrome flavin chromophore initiated signaling via a poorly understood mechanism. By serial femtosecond crystallography (SFX), we show that the photoreduction mechanism of             <jats:italic toggle=\"yes\">Chlamydomonas reinhardtii</jats:italic>             cryptochrome involves three loci [carboxyl-terminal region, a transient protonation pathway, and flavin adenine dinucleotide (FAD)\u2013binding site] acting in unison to accomplish three effects: radical pair stabilization, protonation of FAD radical, and formation of the signaling state. Using 19 time-resolved SFX snapshots between 10\u00a0nanoseconds and 233\u00a0milliseconds, we found that light-driven FAD             <jats:sup>\u2022\u2013</jats:sup>             /tyrosyl-373 radical pair (RP) formation primes \u03b122 unfolding. Electron transfer\u2013dependent protonation of aspartate-321 by tyrosine-373 is the epicenter of unfolding by disrupting salt bridges between \u03b122 and the photolyase homology region. Before helix unfolding, another pathway opens transiently for FAD             <jats:sup>\u2022\u2013</jats:sup>             protonation and RP stabilization. This link between RP formation and conformational changes provides a structural basis for signaling by animal-like cryptochromes.           </jats:p>",
+            "techniques": {
+                "output": [
+                    {
+                        "inText": "Transient photoreduction",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "nonlinear interaction",
+                                "altLabel": [],
+                                "subClassOf": {
+                                    "PaNET00003": "defined by experimental physical process"
+                                },
+                                "definition1": "",
+                                "definition2": ""
+                            }
+                        }
+                    },
+                    {
+                        "inText": "FAD\u2013binding site",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "x-ray standing wave",
+                                "altLabel": [
+                                    "XSW"
+                                ],
+                                "subClassOf": {
+                                    "CHMO_0000182": "",
+                                    "PaNET00202": "absorption technique",
+                                    "PaNET00400": "obtain atomic structure",
+                                    "PaNET01012": "x-ray probe",
+                                    "PaNET01022": "diffraction",
+                                    "Q133900": ""
+                                },
+                                "definition1": "",
+                                "definition2": "https://en.wikipedia.org/wiki/X-ray_standing_waves"
+                            }
+                        }
+                    },
+                    {
+                        "inText": "Flavin adenine dinucleotide (FAD)",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "grazing incidence small angle scattering",
+                                "altLabel": [
+                                    "GISAS",
+                                    "grazing incidence SAS"
+                                ],
+                                "subClassOf": {
+                                    "PaNET01098": "grazing incidence diffraction",
+                                    "PaNET01124": "small angle scattering"
+                                },
+                                "definition1": "",
+                                "definition2": "https://en.wikipedia.org/wiki/Grazing-incidence_small-angle_scattering"
+                            }
+                        }
+                    },
+                    {
+                        "inText": "Protonation pathway",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "radiotherapy",
+                                "altLabel": [
+                                    "radiation therapy"
+                                ],
+                                "subClassOf": {
+                                    "PaNET00404": "therapy"
+                                },
+                                "definition1": "",
+                                "definition2": "https://en.wikipedia.org/wiki/Radiation_therapy"
+                            }
+                        }
+                    },
+                    {
+                        "inText": "Flavin chromophore",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "UV visible photon probe",
+                                "altLabel": [],
+                                "subClassOf": {
+                                    "PaNET00100": "photon probe"
+                                },
+                                "definition1": "",
+                                "definition2": ""
+                            }
+                        }
+                    },
+                    {
+                        "inText": "Carboxyl-terminal region",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "chiral determination",
+                                "altLabel": [],
+                                "subClassOf": {
+                                    "PaNET00005": "defined by purpose"
+                                },
+                                "definition1": "",
+                                "definition2": ""
+                            }
+                        }
+                    },
+                    {
+                        "inText": "Radical pair stabilization",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "medical application",
+                                "altLabel": [],
+                                "subClassOf": {
+                                    "PaNET00005": "defined by purpose"
+                                },
+                                "definition1": "",
+                                "definition2": ""
+                            }
+                        }
+                    },
+                    {
+                        "inText": "Protonation of FAD radical",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "propagation technique",
+                                "altLabel": [
+                                    "forward scattering technique"
+                                ],
+                                "subClassOf": {
+                                    "PaNET00003": "defined by experimental physical process"
+                                },
+                                "definition1": "",
+                                "definition2": ""
+                            }
+                        }
+                    },
+                    {
+                        "inText": "Formation of signaling state",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "obtain 3D spatial map",
+                                "altLabel": [],
+                                "subClassOf": {
+                                    "PaNET00401": "obtain spatial map",
+                                    "PaNET01106": "imaging"
+                                },
+                                "definition1": "",
+                                "definition2": ""
+                            }
+                        }
+                    },
+                    {
+                        "inText": "Helix unfolding",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "inelastic scattering",
+                                "altLabel": [],
+                                "subClassOf": {
+                                    "PaNET01033": "incoherent scattering"
+                                },
+                                "definition1": "",
+                                "definition2": "https://en.wikipedia.org/wiki/Inelastic_scattering"
+                            }
+                        }
+                    },
+                    {
+                        "inText": "Salt bridges",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "soft x-ray imaging",
+                                "altLabel": [],
+                                "subClassOf": {
+                                    "PaNET01285": "x-ray imaging",
+                                    "PaNET01012": "x-ray probe"
+                                },
+                                "definition1": "",
+                                "definition2": ""
+                            }
+                        }
+                    },
+                    {
+                        "inText": "Tyrosine-373",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "versus energy",
+                                "altLabel": [],
+                                "subClassOf": {
+                                    "PaNET00004": "defined by functional dependence"
+                                },
+                                "definition1": "",
+                                "definition2": ""
+                            }
+                        }
+                    },
+                    {
+                        "inText": "\u03b122 unfolding",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "ion imaging",
+                                "altLabel": [],
+                                "subClassOf": {
+                                    "PaNET00100": "photon probe",
+                                    "PaNET01048": "ion emission technique",
+                                    "PaNET01058": "versus emission momentum"
+                                },
+                                "definition1": "",
+                                "definition2": ""
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "doi": "10.1002/advs.202416035",
+            "abstract": "<jats:title>Abstract</jats:title><jats:p>Laser ablation in liquid (LAL) is a reference technique for the synthesis of multicomponent non\u2010equilibrium nanomaterials which have potentially disruptive properties in photonics, nanomedicine, and catalysis. Yet, ablation dynamics is poorly understood regarding the multielement matter and, therefore, the remarkable potential of LAL for controlling the local atomic structure of metastable nanophases remains largely unexploited. Here, the dynamics of LAL are investigated with non\u2010equilibrium gold\u2010iron nanoalloys generated in the presence of gas\u2010evolving additives, which drive the formation of different nanostructures. With analytical electron microscopy, the structure in the different conditions is properly identified through complete segregation into oxide\u2010metal heterostructures, precipitation of nanoclusters within the nanoalloys, or ordered solid solutions. To elucidate the unforeseen effects of the solutes on the atomic structure of nanoalloys, the early and full dynamics of LAL is investigated with time\u2010resolved experiments, leading to the pivotal evidence that alloying of metastable compounds with different chemical reactivity is favored by decreasing the pressure of the shockwave front. The resulting picture indicates LAL with gas\u2010evolving additives as a strategy for molding the atomic structure of non\u2010equilibrium nanoalloys, opening the way to the development of a library of advanced nanomaterials otherwise inaccessible.</jats:p>",
+            "techniques": {
+                "output": [
+                    {
+                        "inText": "SAXS",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "small angle x-ray scattering",
+                                "altLabel": [
+                                    "SAXS"
+                                ],
+                                "subClassOf": {
+                                    "PaNET01012": "x-ray probe",
+                                    "PaNET01124": "small angle scattering"
+                                },
+                                "definition1": "",
+                                "definition2": "https://en.wikipedia.org/wiki/Small-angle_X-ray_scattering"
+                            }
+                        }
+                    },
+                    {
+                        "inText": "XANES",
+                        "inPaNET": {
+                            "technique": {
+                                "label": "x-ray absorption near edge structure",
+                                "altLabel": [
+                                    "NEXAFS",
+                                    "XANES"
+                                ],
+                                "subClassOf": {
+                                    "PaNET00402": "obtain electronic ground state properties",
+                                    "PaNET01197": "x-ray absorption fine structure"
+                                },
+                                "definition1": "",
+                                "definition2": "https://en.wikipedia.org/wiki/X-ray_absorption_near_edge_structure"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

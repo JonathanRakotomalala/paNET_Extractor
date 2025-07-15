@@ -32,7 +32,7 @@ class OpenAire:
     else:
         raise AbstractImportError("Invalid OpenAire Access Token")
     
-    def get_abstract_from_doi(doi):
+    def call_open_aire(doi):
         """
             get the abstract with openaire's api 
 
@@ -68,4 +68,14 @@ class OpenAire:
              raise AbstractImportError("Unable to extract abstract from DOI")
         
 
+    def get_abstract_from_doi(doi):
+        response = OpenAire.call_open_aire(doi)
+        json_response = response.json()
+        results = json_response.get('results', [])
 
+        if results and 'descriptions' in results[0] and results[0]['descriptions']:
+            abstract = results[0]['descriptions'][0]
+        else:
+            abstract = "No abstract available"
+
+        return abstract
