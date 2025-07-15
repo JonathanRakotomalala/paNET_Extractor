@@ -24,6 +24,7 @@ class RateLimitError(Exception):
 class OpenAire:
     import requests
     OPEN_AIRE_REFRESH_ACCESS_TOKEN = os.environ.get("OPEN_AIRE_REFRESH_ACCESS_TOKEN")
+    
     response_token = requests.get("https://services.openaire.eu/uoa-user-management/api/users/getAccessToken?refreshToken="+OPEN_AIRE_REFRESH_ACCESS_TOKEN)
 
     if response_token.status_code == 200:

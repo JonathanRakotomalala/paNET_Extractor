@@ -8,6 +8,16 @@ class EmptyOntologyError(Exception):
     def __str__(self):
         return f'{self.message}'
     
+
+class OntologyNotFoundError(Exception):
+    def __init__(self,message="Wrong path"):
+        self.message = message 
+        super().__init__(self.message)
+
+    def __str__(self):
+        return f'{self.message}'
+    
+
 class Ontology:
     def getting_ontology():
         """import the ontology from local or from internet return error if invalid link or path
@@ -18,10 +28,11 @@ class Ontology:
             Raises:
                 EmptyOntologyError: if the pathfile/url is wrong or failed to get the ontology
         """
-        ontology = owlready2.get_ontology(
-            "https://data.bioontology.org/ontologies/PANET/submissions/26/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb"
-        )
+
         try:
+            ontology = owlready2.get_ontology(
+            "https://data.bioontology.org/ontologies/PANET/submissions/26/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb"
+            )
             ontology.load()
             classes = ontology.classes()
             #we don't use the classes variable to get the length because the transformation of a generator into a list is definitive
@@ -44,7 +55,7 @@ class Ontology:
                 raise EmptyOntologyError()
         except (FileNotFoundError,base.OwlReadyOntologyParsingError) as e:
             if isinstance(e,FileNotFoundError):
-                raise EmptyOntologyError("Error cannot find path")
+                raise OntologyNotFoundError("Error cannot find path")
             else:
                 raise EmptyOntologyError("Error while trying to load ontology")
     def extract_subclass_of(a_class):

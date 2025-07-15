@@ -26,7 +26,7 @@ class TextTechnique(BaseModel):
 class Result(BaseModel):
     output: list[TextTechnique] = Field(
         examples=[
-            {
+            [{
                 "inText": "Small-angle scattering",
                 "InPaNET": {
                     "technique": {
@@ -38,7 +38,7 @@ class Result(BaseModel):
                         },
                     }
                 },
-            }
+            }]
         ]
     )
 

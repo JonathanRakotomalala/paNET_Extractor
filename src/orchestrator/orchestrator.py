@@ -2,7 +2,7 @@ from ..llm.llm import Llm
 from ..matchmapper.matchmapper import MatchMapper
 import json
 from fastapi import HTTPException
-from ..ontology.ontology_import import EmptyOntologyError
+from ..ontology.ontology_import import EmptyOntologyError,OntologyNotFoundError
 from ..openaire import OpenAire, AbstractImportError, RateLimitError
 import time
 import math
@@ -28,8 +28,8 @@ class Orchestrator:
         try:
             data = json.loads(extracted_techniques)
             return {"output": MatchMapper.map_to_panet(data)}
-        except (json.JSONDecodeError, EmptyOntologyError) as e:
-            if isinstance(e, EmptyOntologyError):
+        except (json.JSONDecodeError, EmptyOntologyError,OntologyNotFoundError) as e:
+            if isinstance(e, EmptyOntologyError) or isinstance(e,OntologyNotFoundError):
                 raise HTTPException(
                     status_code=404, detail=e.message, headers={"message": e.message}
                 )
@@ -55,7 +55,7 @@ class Orchestrator:
         """
         try:
             print(Orchestrator.time_start)
-            if Orchestrator.time_start is None or Orchestrator.time_start<=time.time():
+            if Orchestrator.time_start is None or Orchestrator.time_start <= time.time():
                 my_list = []
                 for _, i in doi_list:
                     for j in i:

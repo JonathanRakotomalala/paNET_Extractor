@@ -16,6 +16,9 @@ def test_output_format(mocker):
             ]
         }
     ]
+    mocker.patch.object(
+        Llm, "pipe", new_callable=mocker.PropertyMock, return_value=mock_pipe
+    )
     my_result = Llm.llm_run(QUERY_2)
 
     assert isinstance(json.loads(my_result), dict)
