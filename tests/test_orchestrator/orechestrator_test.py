@@ -1,7 +1,11 @@
 from src.orchestrator.orchestrator import Orchestrator
 from src.llm import Llm
 from src.matchmapper import MatchMapper
+from src.ontology import EmptyOntologyError
 from src.openaire import OpenAire
+import pytest
+from fastapi import HTTPException
+
 
 def test_orchestrator_search_from_text_success(mocker):
     mocker.patch("src.llm.Llm.llm_run",return_value = "{\"techniques\": [\"small-angle scattering\"]}")
@@ -45,3 +49,17 @@ def test_orchestrator_list_search_from_dois_success(mocker):
     OpenAire.get_abstract_from_doi.assert_called_with("12345")
 
     assert result == {"outputs":[{"doi":"12345","abstract":"fffff","techniques":{"output":[{"inPaNET":{"techniques": ["small-angle scattering"]},"inText":"Small angle scattering"}]}}]}
+
+
+def test_orchestrator_search_EmptyOntologyError(mocker):
+    mocker.patch("src.llm.Llm.llm_run",return_value = "\"techniques\": [\"small-angle scattering\"]")
+    mocker.patch("src.matchmapper.MatchMapper.map_to_panet",side_effect =EmptyOntologyError)
+
+    with pytest.raises(HTTPException):
+        Orchestrator.search("fffff")
+
+def test_orchestrator_search_JSONDecoderError(mocker):
+    mocker.patch("src.llm.Llm.llm_run",return_value = "\"techniques\": [\"small-angle scattering\"]")
+
+    with pytest.raises(HTTPException):
+        Orchestrator.search("fffff")
