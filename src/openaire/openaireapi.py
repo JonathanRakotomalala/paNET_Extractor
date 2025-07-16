@@ -78,7 +78,10 @@ class OpenAire:
                 abstract = results[0]['descriptions'][0]
             else:
                 abstract = "No abstract available"
-        except AbstractImportError:
-            abstract = "No abstract available"
+        except (AbstractImportError,RateLimitError) as e:
+            if isinstance(e,AbstractImportError):
+                abstract = "No abstract available"
+            else:
+                raise RateLimitError(e.retry,"Too many requests")
 
         return abstract
