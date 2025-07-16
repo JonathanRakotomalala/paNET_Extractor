@@ -20,27 +20,7 @@ def test_orchestrator_search_from_text_success(mocker):
 
 def test_orchestrator_list_search_from_dois_success(mocker):
     Orchestrator.time_start=None
-
-    class MockResponse:
-        def __init__(self, json_data):
-            self.json_data = json_data
-
-        def json(self):
-            return self.json_data
-    mocker.patch("src.openaire.OpenAire.get_abstract_from_doi", return_value=MockResponse({
-        "header": {
-            "numFound": 1,
-            "maxScore": 1.0,
-            "page": 1,
-            "pageSize": 10
-        },
-        "results": [{
-            "authors": [{"fullName": "John Doe", "name": None, "surname": None, "rank": 1, "pid": None}],
-            "mainTitle": "Some publication",
-            "subTitle": None,
-            "descriptions": ["fffff"]
-        }]
-    }))
+    mocker.patch("src.openaire.OpenAire.get_abstract_from_doi", return_value="fffff")
     mocker.patch("src.orchestrator.Orchestrator.search",return_value = {"output":[{"inPaNET":{"techniques": ["small-angle scattering"]},"inText":"Small angle scattering"}]})
 
     result = Orchestrator.list_search([("dois",["12345"])])

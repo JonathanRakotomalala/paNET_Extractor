@@ -69,13 +69,16 @@ class OpenAire:
         
 
     def get_abstract_from_doi(doi):
-        response = OpenAire.call_open_aire(doi)
-        json_response = response.json()
-        results = json_response.get('results', [])
+        try:
+            response = OpenAire.call_open_aire(doi)
+            json_response = response.json()
+            results = json_response.get('results', [])
 
-        if results and 'descriptions' in results[0] and results[0]['descriptions']:
-            abstract = results[0]['descriptions'][0]
-        else:
+            if results and 'descriptions' in results[0] and results[0]['descriptions']:
+                abstract = results[0]['descriptions'][0]
+            else:
+                abstract = "No abstract available"
+        except AbstractImportError:
             abstract = "No abstract available"
 
         return abstract

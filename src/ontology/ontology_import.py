@@ -57,7 +57,7 @@ class Ontology:
             if isinstance(e,FileNotFoundError):
                 raise OntologyNotFoundError("Error cannot find path")
             else:
-                raise EmptyOntologyError("Error while trying to load ontology")
+                raise EmptyOntologyError("Error while trying to load ontology:ontology not found")
     def extract_subclass_of(a_class):
         """extract the name and label of the classes from which a_class inherits
 

@@ -5,6 +5,7 @@ import httpx
 import asyncio
 import json
 import random
+import requests
 
 LINK = "https://api.openalex.org/works?filter=authorships.institutions.lineage:i2801997478,publication_year:2025 "
 LENGTH = len("https://doi.org/")
@@ -23,29 +24,17 @@ class ServiceEvaluation:
 
             meta = response.json()["meta"]
             nb_page = math.ceil(meta["count"] / meta["per_page"])
-            def index_is_equal(x):
-                return x.index in [random.range(0,nb_page),random.range(0,nb_page),random.range(0,nb_page)]
             my_doi_list = []
 
-            # for i in range(0, nb_page):
-            #     print(nb_page)
-            #     page = await client.get("https://api.openalex.org/works?filter=authorships.institutions.lineage:i2801997478,publication_year:2025,keywords.id:keywords/crystal,primary_topic.id:t10247" + "&page=" + str(i+1))
-            #     if page.status_code == 200:
-
-            #         for j in page.json()["results"]:
-            #             print(j["doi"])
-            #             if j["doi"] is not None:
-            #                 my_doi_list.append(j["doi"].split("https://doi.org/")[-1])
-
-            requests = []
+            open_alex_requests = []
             print(nb_page)
             for i in range(1, nb_page + 1):
                 
-                requests.append(client.get("https://api.openalex.org/works?filter=authorships.institutions.lineage:i2801997478,publication_year:2025" + "&page=" + str(i)))
+                open_alex_requests.append(client.get(LINK + "&page=" + str(i)))
             
             # wait all the parallel responses
             try:
-                responses = await asyncio.gather(*requests)
+                responses = await asyncio.gather(*open_alex_requests)
             except httpx.RequestError as e:
                 print(f"Erreur lors de la récupération des pages: {e}")
                 return
@@ -63,7 +52,7 @@ class ServiceEvaluation:
             sample_dois = random.sample(my_doi_list, min(3, len(my_doi_list)))
             print(f"3 selected : {sample_dois}")
 
-            response = await client.post(
+            response = requests.post(
                 url="http://127.0.0.1:8000/dois_to_techniques/",
                 headers={
                     "Authorization": "Bearer "+OpenAire.TOKEN,

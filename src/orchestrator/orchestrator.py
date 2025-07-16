@@ -3,7 +3,7 @@ from ..matchmapper.matchmapper import MatchMapper
 import json
 from fastapi import HTTPException
 from ..ontology.ontology_import import EmptyOntologyError,OntologyNotFoundError
-from ..openaire import OpenAire, AbstractImportError, RateLimitError
+from ..openaire import OpenAire, RateLimitError
 import time
 import math
 
@@ -54,8 +54,7 @@ class Orchestrator:
                 HTTPException: If failed to get the abstract or reached request rate limit
         """
         try:
-            print(Orchestrator.time_start)
-
+            # if time_start is past we can call openaire and do the operations
             if Orchestrator.time_start is None or Orchestrator.time_start <= time.time():
                 my_list = []
                 for _, i in doi_list:
@@ -65,24 +64,25 @@ class Orchestrator:
                         if result == "No abstract available":
                             techniques = {"output":[]}
                         else:
-                            techniques = Orchestrator.search(result)
+                            try:
+                                techniques = Orchestrator.search(result)
+                            except HTTPException :
+                                techniques = {"output":[]}
+
                         my_list.append(
                             {"doi": j, "abstract": result, "techniques": techniques}
                         )
 
                 return {"outputs": my_list}
+            # else we calculate the remaining time until we can make a request and we raise an exception
             else:
                 raise RateLimitError(str(math.ceil(Orchestrator.time_start-time.time())))
-        except (AbstractImportError, RateLimitError) as e:
-            if isinstance(e, AbstractImportError):
-                raise HTTPException(
-                    status_code=404, detail=e.message, headers={"message": e.message}
-                )
-            else:
-                Orchestrator.time_start = time.time()+float(e.retry)
-                raise HTTPException(
-                    status_code=429,
-                    detail={"error": e.message},
-                    headers={"Retry-After": str(e.retry)},
-                )
+        except (RateLimitError) as e:
+            # # 429 error we set time_start to the actual time plus the retry-after
+            Orchestrator.time_start = time.time()+float(e.retry)
+            raise HTTPException(
+                status_code=429,
+                detail={"error": e.message},
+                headers={"Retry-After": str(e.retry)},
+            )
 
