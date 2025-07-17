@@ -44,13 +44,13 @@ class Result(BaseModel):
 
 
 class Message(BaseModel):
-    detail: str = Field(examples=["Error while trying to load ontology"])
+    detail: str = Field(examples=["Error while trying to load ontology:ontology not found"])
 
 class BadRequestMessage(BaseModel):
     detail: str = Field(examples=["Bad request"])
 
 class CannotAcceptMesssage(BaseModel):
-    detail: str = Field(examples=["Not acceoted must be an application/json"])
+    detail: str = Field(examples=["Not accepted must be an application/json"])
 
 class RateLimitMessage(BaseModel):
     detail: str = Field(examples=["Too many requests"])
@@ -65,6 +65,7 @@ class DoiTechResponse(BaseModel):
 
 class DoiTechResponses(BaseModel):
     outputs:list[DoiTechResponse]
+
 
 app = FastAPI(docs_url=None, redoc_url=None)
 
@@ -102,7 +103,7 @@ def get_techniques(request: Request,
     else:
         return Orchestrator.search(input)
 
-@app.post("/dois_to_techniques/",responses={404:{"model":Message},406:{"model":CannotAcceptMesssage},429:{}},response_class=JSONResponse)
+@app.post("/dois_to_techniques/",responses={404:{"model":Message},406:{"model":CannotAcceptMesssage},429:{"model":RateLimitMessage}},response_class=JSONResponse)
 def get_techniques_from_dois(request:Request,dois:Annotated[Dois,Body(example = {"dois":["10.1007/s00396-004-1145-9","10.1002/smll.202411211","10.3406/bspf.2011.14065"]})])->DoiTechResponses:
     """Get techniques from DOIs"""
     if "application/json" not in request.headers.get("accept",""):
@@ -126,4 +127,5 @@ def custom_openapi():
 
 
 app.openapi = custom_openapi
+
 
