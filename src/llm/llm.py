@@ -20,32 +20,41 @@ DOCUMENT_SUMMARY = textwrap.dedent("""
 
 DOCUMENT_METADATA_EXTRACTION = textwrap.dedent("""
     
-   Given a scientific text and your prior knwoledge of synchrotron experimental techniques, analyze the text and return a JSON object with the following structure:
-    
-   {{
-      "techniques": [list of technique acronyms and/or technique names] or [] if no techniques identified,
-   }}
- 
-   Requirements:
-    
-   1. Techniques:
-      - ONLY include techniques that are EXPLICITLY mentioned in the text
-      - Use the full technique name EXACTLY as written in the text. Including the acronym if present  (like SAXS or XANES) . Write the technics exactly as it is in the text, keep the exact casing (capitalization) as it appears in the text.
-      -  If no techniques are mentioned, return an empty list `[]`
-      - DO NOT infer techniques from experimental results or sample characterization mentions  
-      - DO NOT combine, merge or mix multiple techniques (example: operando absorption and x-ray diffraction tomography -> [operando absorption, x-ray diffraction tomography])
-      - DO NOT include techniques that might typically be used in the context of the given text, but aren't specifically stated
-      
+Given a scientific text and your knowledge of synchrotron experimental techniques, analyze the text and return a JSON object with the following structure:
 
-       
-   2. Output content:
-      - Use ONLY explicit/mentioned/factual information
-      - Each technic should have one occurence only.
-      - DO NOT include implied or inferred information
-      - Generate only the RAW json object (no extra text)
-      - Each technique and sample must be directly quotable from the source text
-    
-   Note: Return Empty list if no technics are EXPLICITLY mentioned in the text
+    {{
+      "techniques": [list of technique acronyms and/or full technique names, or an empty list if no techniques are explicitly mentioned]
+    }}
+
+    Requirements:
+
+        Techniques:
+
+            ONLY include techniques explicitly mentioned in the text.
+
+            Use the exact name and casing (capitalization) as it appears(written) in the text (e.g., SAXS, XANES).
+
+            If no techniques are mentioned, return an empty list [].
+
+            Do not infer techniques from experimental results or sample characterization mentions.
+
+            Do not combine multiple techniques (e.g., "operando absorption and X-ray diffraction tomography" → ["operando absorption", "X-ray diffraction tomography"]).
+
+            Do not include techniques that might be commonly used in the field but are not explicitly stated in the text.
+            
+            Do not include techniques such as SAXS, XANES, operando absorption and X-ray diffraction tomography or any other that is **not** mentioned in the provided text. Only include those that appear in the text verbatim.
+
+        Output content:
+
+            Only include explicitly stated techniques.
+
+            Each technique should be listed once (no duplicates).
+
+            Only provide the RAW JSON object (no extra text).
+
+            Each technique must be directly quotable from the provided source text.
+
+    Note: If no techniques are explicitly mentioned in the text, return an empty list [].
     
    Text to analyze:
    """)

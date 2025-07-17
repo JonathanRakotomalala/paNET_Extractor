@@ -6,7 +6,7 @@ from ..ontology.ontology_import import EmptyOntologyError,OntologyNotFoundError
 from ..openaire import OpenAire, RateLimitError
 import time
 import math
-
+import re
 
 
 
@@ -63,7 +63,8 @@ class Orchestrator:
 
                     for j in i:
                         
-                        result = OpenAire.get_abstract_from_doi(j)
+                        first_result = OpenAire.get_abstract_from_doi(j)
+                        result = re.sub(r'<.*?>', ' ', first_result)
                         if result == "No abstract available":
                             techniques = {"output":[]}
                         else:
