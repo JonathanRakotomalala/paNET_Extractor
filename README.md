@@ -3,7 +3,8 @@
 Points out technics from scientific text and maps them into the PaNET ontology terms with all details.
 
 ## Setting up environment
-Use [uv](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer)  to create the virtual environemnt and [pip](https://pip.pypa.io/en/stable/) to install.
+Use [uv](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer)  to create the virtual environemnt and [pip](https://pip.pypa.io/en/stable/) to install new packages if needed.</br>
+uv sync to install all dependencies defined in the project.
 
 ## Project structure
 In the src there are 7 modules:</br>
