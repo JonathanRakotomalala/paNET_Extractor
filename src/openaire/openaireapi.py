@@ -1,8 +1,7 @@
 
 import time
 import os
-
-time_start = None
+import requests
 
 
 class AbstractImportError(Exception):
@@ -22,15 +21,17 @@ class RateLimitError(Exception):
         return f'{self.message+self.retry}'
 
 class OpenAire:
-    import requests
-    OPEN_AIRE_REFRESH_ACCESS_TOKEN = os.environ.get("OPEN_AIRE_REFRESH_ACCESS_TOKEN")
-    
-    response_token = requests.get("https://services.openaire.eu/uoa-user-management/api/users/getAccessToken?refreshToken="+OPEN_AIRE_REFRESH_ACCESS_TOKEN)
 
-    if response_token.status_code == 200:
-        TOKEN = response_token.json()["access_token"]
-    else:
-        raise AbstractImportError("Invalid OpenAire Access Token")
+    TOKEN = None
+
+    def __init__(self):
+        OPEN_AIRE_REFRESH_ACCESS_TOKEN = os.environ.get("OPEN_AIRE_REFRESH_ACCESS_TOKEN")
+        response_token = requests.get("https://services.openaire.eu/uoa-user-management/api/users/getAccessToken?refreshToken="+OPEN_AIRE_REFRESH_ACCESS_TOKEN)
+
+        if response_token.status_code == 200:
+            OpenAire.TOKEN = response_token.json()["access_token"]
+        else:
+            raise AbstractImportError("Invalid OpenAire Access Token")
     
     def call_open_aire(doi):
         """
@@ -50,7 +51,7 @@ class OpenAire:
         """
         url_link = "https://api.openaire.eu/graph/v1/researchProducts?pid="+doi
 
-        response = OpenAire.requests.get(url_link,headers={"Authorization":"Bearer "+OpenAire.TOKEN,"User-Agent":"PaNetExtractor/1.0.0 (jonathan.rakotomalala@esrf.fr)"})
+        response = requests.get(url_link,headers={"Authorization":"Bearer "+OpenAire.TOKEN,"User-Agent":"PaNetExtractor/1.0.0 (jonathan.rakotomalala@esrf.fr)"})
         time_start = time.time()
 
         if response.status_code == 200 and response.json()['header']['numFound']>0:

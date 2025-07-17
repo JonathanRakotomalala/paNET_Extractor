@@ -8,9 +8,11 @@ import time
 import math
 
 
+
+
 class Orchestrator:
-    time_start = None
-    
+    time_start =None
+    OpenAire()
     def search(input: str):
         """
             Search the techniques in the text and map them to those in paNET
@@ -60,14 +62,15 @@ class Orchestrator:
                 for _, i in doi_list:
 
                     for j in i:
+                        
                         result = OpenAire.get_abstract_from_doi(j)
                         if result == "No abstract available":
                             techniques = {"output":[]}
                         else:
                             try:
                                 techniques = Orchestrator.search(result)
-                            except HTTPException :
-                                techniques = {"output":[]}
+                            except HTTPException:
+                                    techniques = {"output":[]}
 
                         my_list.append(
                             {"doi": j, "abstract": result, "techniques": techniques}

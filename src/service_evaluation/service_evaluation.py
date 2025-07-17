@@ -1,11 +1,15 @@
 
+
 import math
-from src.openaire import OpenAire
 import httpx
 import asyncio
-import json
 import random
-import requests
+from src.openaire import OpenAire
+import json
+from fastapi.testclient import TestClient
+from src.main import app
+
+
 
 LINK = "https://api.openalex.org/works?filter=authorships.institutions.lineage:i2801997478,publication_year:2025 "
 LENGTH = len("https://doi.org/")
@@ -31,14 +35,9 @@ class ServiceEvaluation:
             for i in range(1, nb_page + 1):
                 
                 open_alex_requests.append(client.get(LINK + "&page=" + str(i)))
-            
-            # wait all the parallel responses
-            try:
-                responses = await asyncio.gather(*open_alex_requests)
-            except httpx.RequestError as e:
-                print(f"Erreur lors de la récupération des pages: {e}")
-                return
-            
+
+            responses = await asyncio.gather(*open_alex_requests)
+
 
 
             for page_response in responses:
@@ -51,26 +50,30 @@ class ServiceEvaluation:
 
             sample_dois = random.sample(my_doi_list, min(3, len(my_doi_list)))
             print(f"3 selected : {sample_dois}")
-
-            response = requests.post(
-                url="http://127.0.0.1:8000/dois_to_techniques/",
-                headers={
-                    "Authorization": "Bearer "+OpenAire.TOKEN,
-                    "User-Agent": "PaNetExtractor/1.0.0 (jonathan.rakotomalala@esrf.fr)",
-                    "Content-type": "application/json",
-                    "Accept": "application/json",
-                },
-                json={"dois": sample_dois},
-                timeout=None
-            )
-            
-            if response.status_code == 200:
-                with open("data/results.json", "w") as file:
-                    file.write(json.dumps(response.json()))
-            else :
-                print(response.status_code)
-                print(response.json())
+            OpenAire()
+            with TestClient(app) as appclient:
+                response = appclient.post(
+                    url="http://127.0.0.1:8000/dois_to_techniques/",
+                    headers={
+                        "Authorization": "Bearer "+OpenAire.TOKEN,
+                        "User-Agent": "PaNetExtractor/1.0.0 (jonathan.rakotomalala@esrf.fr)",
+                        "Content-type": "application/json",
+                        "Accept": "application/json",
+                    },
+                    json={"dois": sample_dois},
+                    timeout=None
+                )
+                if response.status_code == 200:
+                    with open("tests/data/results.json", "w") as file:
+                        file.write(json.dumps(response.json()))
+                else :
+                    print(f"Erreur HTTP {response.status_code}: {response.text}")
+                    print(response.status_code)
+                    print(response.json())
             await client.aclose()
+        
+
+
 
 
 async def main():
