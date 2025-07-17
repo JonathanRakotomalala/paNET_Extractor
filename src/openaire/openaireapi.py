@@ -35,19 +35,16 @@ class OpenAire:
     
     def call_open_aire(doi):
         """
-            get the abstract with openaire's api 
+            call OpenAire search products API to get informations from the doi
 
             Args:
-                doi: a string that represent the digital object identifier
+                doi: a string that represent a DOI
+            Return:
+                a Response
 
-            Returns: 
-                A string, the abstract of the publication
-
-            Raise:
+            Raises:
                 RateLimitError: If the requests limit of openaire api is reached
-                AbstractImportError: If failed to get the abstract
-
-
+                AbstractImportError: If failed to get a good response
         """
         url_link = "https://api.openaire.eu/graph/v1/researchProducts?pid="+doi
 
@@ -70,6 +67,20 @@ class OpenAire:
         
 
     def get_abstract_from_doi(doi):
+        """
+            get the abstract with openaire's api 
+
+            Args:
+                doi: a string that represent the digital object identifier
+
+            Returns: 
+                A string, the abstract of the publication
+
+            Raise:
+                RateLimitError: If the requests limit of openaire api is reached
+                AbstractImportError: If failed to get the abstract
+
+        """
         try:
             response = OpenAire.call_open_aire(doi)
             json_response = response.json()
