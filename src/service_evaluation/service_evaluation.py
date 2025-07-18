@@ -3,15 +3,12 @@
 import math
 import httpx
 import asyncio
-import random
 from src.openaire import OpenAire
 import json
 from fastapi.testclient import TestClient
 from src.main import app
 
-
-
-LINK = "https://api.openalex.org/works?filter=authorships.institutions.lineage:i2801997478,publication_year:2025 "
+LINK = "https://api.openalex.org/works?filter=authorships.institutions.lineage:i2801997478,publication_year:2025"
 LENGTH = len("https://doi.org/")
 
 
@@ -22,7 +19,7 @@ class ServiceEvaluation:
         client = httpx.AsyncClient()
 
         response = await client.get(
-            "https://api.openalex.org/works?filter=authorships.institutions.lineage:i2801997478,publication_year:2025",
+            LINK,
         )
         if response.status_code == 200:
 
@@ -47,8 +44,8 @@ class ServiceEvaluation:
                             my_doi_list.append(j["doi"].split("https://doi.org/")[-1])
 
             print(my_doi_list)
-
-            sample_dois = random.sample(my_doi_list, min(3, len(my_doi_list)))
+            sample_dois = [my_doi_list[0],my_doi_list[1],my_doi_list[2]]
+            # sample_dois = random.sample(my_doi_list, min(3, len(my_doi_list)))
             print(f"3 selected : {sample_dois}")
             OpenAire()
             with TestClient(app) as appclient:

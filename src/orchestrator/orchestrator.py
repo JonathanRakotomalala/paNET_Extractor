@@ -6,7 +6,6 @@ from ..ontology.ontology_import import EmptyOntologyError,OntologyNotFoundError
 from ..openaire import OpenAire, RateLimitError
 import time
 import math
-import re
 
 
 
@@ -57,21 +56,22 @@ class Orchestrator:
         """
         try:
             # if time_start is past we can call openaire and do the operations
+
             if Orchestrator.time_start is None or Orchestrator.time_start <= time.time():
                 my_list = []
                 for _, i in doi_list:
 
                     for j in i:
-                        
-                        first_result = OpenAire.get_abstract_from_doi(j)
-                        result = re.sub(r'<.*?>', ' ', first_result)
+                        result = OpenAire.get_abstract_from_doi(j)
+                        # first_result = OpenAire.get_abstract_from_doi(j)
+                        # result = re.sub(r'<.*?>', ' ',first_result )
                         if result == "No abstract available":
                             techniques = {"output":[]}
                         else:
                             try:
                                 techniques = Orchestrator.search(result)
                             except HTTPException:
-                                    techniques = {"output":[]}
+                                    techniques = "Error could not extract and map techniques"
 
                         my_list.append(
                             {"doi": j, "abstract": result, "techniques": techniques}

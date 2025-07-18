@@ -61,7 +61,7 @@ class Dois(BaseModel):
 class DoiTechResponse(BaseModel):
     doi:str
     abstract:str 
-    techniques:Result
+    techniques:Result|str
 
 class DoiTechResponses(BaseModel):
     outputs:list[DoiTechResponse]

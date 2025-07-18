@@ -1,8 +1,9 @@
 import textwrap
-
+import torch
 # from src.main import my_llm
-from transformers import pipeline
+from transformers import pipeline,AutoModelForCausalLM,AutoTokenizer
 import os
+from huggingface_hub import login
 
 DOCUMENT_SUMMARY = textwrap.dedent("""
    Given a synchrotron-based scientific document, create a very concise yet comprehensive summary in proper scientific prose. Your summary should follow this structure:
@@ -66,8 +67,15 @@ QUERY_3 = "Un outillage lithique acheuléen, une riche faune du Pléistocène mo
 
 class Llm:
     ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")
+    # login to huggingface 
+    login(token=ACCESS_TOKEN)
+    model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-3B-Instruct", torch_dtype=torch.bfloat16, pad_token_id=0,use_cache=True)
+    tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-3B-Instruct")
+    # tokenizer.chat_template = "{% if not add_generation_prompt is defined %}{% set add_generation_prompt = false %}{% endif %}{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}"
+ # https://huggingface.co/docs/transformers.js/api/pipelines#pipelinestextgenerationpipeline
+        # temperature is a paramater of the generation, but it can be used in pipeline if the llm model support support auto-regressive generation : https://huggingface.co/docs/transformers.js/en/pipelines#natural-language-processing https://huggingface.co/docs/transformers.js/main/en/api/utils/generation#utilsgenerationgenerationconfigtype--code-object-code
     pipe = pipeline(
-        "text-generation", model="meta-llama/Llama-3.2-1B-Instruct", token=ACCESS_TOKEN
+        "text-generation",model =model,tokenizer=tokenizer,temperature = 0.62, top_p=0.98,top_k=11,prompt_lookup_num_tokens = 3
     )
 
     def llm_run(input: str):
@@ -82,21 +90,7 @@ class Llm:
             {"role": "user", "content": DOCUMENT_METADATA_EXTRACTION + input},
         ]
 
-        # https://huggingface.co/docs/transformers.js/api/pipelines#pipelinestextgenerationpipeline
-        # temperature is a paramater of the generation, but it can be used in pipeline if the llm model support support auto-regressive generation : https://huggingface.co/docs/transformers.js/en/pipelines#natural-language-processing https://huggingface.co/docs/transformers.js/main/en/api/utils/generation#utilsgenerationgenerationconfigtype--code-object-code
-
         answer = Llm.pipe(messages)
-
-        # tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-1B-Instruct")
-        # model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-1B-Instruct")
-
-        # inputs = tokenizer.apply_chat_template(messages,add_generation_prompt=True,return_dict=True,return_tensors = "pt")
-
-        # inputs = {k: v for k, v in inputs.items()}
-        # outputs = model.generate(**inputs, max_new_tokens=128,temperature = 0.2,top_k=5)
-        # answer = tokenizer.decode(outputs[0][len(inputs["input_ids"][0]):])[:-10]
-
-        print(answer)
 
         print(answer)
 
