@@ -42,4 +42,4 @@ jobs:
         OPEN_AIRE_REFRESH_ACCESS_TOKEN: ${{ secrets.OPEN_AIRE_REFRESH_ACCESS_TOKEN}}
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run: |
-        uv run pytest
+        uv run pytest --cov-report term-missing --cov=src tests/
