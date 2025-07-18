@@ -96,11 +96,12 @@ class Llm:
         messages = [
             {"role": "user", "content": DOCUMENT_METADATA_EXTRACTION + input},
         ]
-
+        # make the model generate an answer
         answer = Llm.pipe(messages)
 
         print(answer)
 
+        # get the answer generated 
         response = answer[0]["generated_text"][1]["content"]
 
         return response

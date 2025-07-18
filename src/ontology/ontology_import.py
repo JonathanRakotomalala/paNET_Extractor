@@ -68,6 +68,8 @@ class Ontology:
             dictionnary containing the classes from which a_class inherit
 
         """
+
+        # is_a gives the superclass of a_class
         superclass = a_class.is_a
         output = {}
         for i in superclass:
