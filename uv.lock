@@ -839,6 +839,7 @@ name = "panetextractor"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "accelerate" },
     { name = "fastapi", extra = ["standard"] },
     { name = "httpx" },
     { name = "owlready2" },
@@ -852,6 +853,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "accelerate", specifier = ">=1.8.1" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.13" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "owlready2", specifier = ">=0.48" },
