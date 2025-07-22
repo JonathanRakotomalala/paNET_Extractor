@@ -69,10 +69,10 @@ class Orchestrator:
                         # first_result = OpenAire.get_abstract_from_doi(j)
                         # result = re.sub(r'<.*?>', ' ',first_result )
                         if result == "No abstract available":
-                            techniques = {"output":[]}
+                            techniques = []
                         else:
                             try:
-                                techniques = Orchestrator.search(result)
+                                techniques = Orchestrator.search(result)["output"]
                             except HTTPException:
                                     techniques = "Error could not extract and map techniques"
 

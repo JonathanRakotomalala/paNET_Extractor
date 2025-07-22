@@ -19,7 +19,7 @@ class MatchMapper:
         """
         minimum = MAXIMUM_INTEGER
         levenshtein_distance_found = minimum
-        output = {"technique": None, "distance": None}
+        output = {"technique": None, "score": None}
         is_upper_case = input.isupper()
         list_of_technics = []
         nearest_technics = None
@@ -53,19 +53,19 @@ class MatchMapper:
                     case True:
                         # list all the technics
                         list_of_technics.append(
-                            {"technique": term, "distance": levenshtein_distance_found}
+                            {"technique": term, "score": levenshtein_distance_found}
                         )
 
                         if levenshtein_distance_found < minimum:
                             minimum = levenshtein_distance_found
-                            output["distance"] = levenshtein_distance_found
+                            output["score"] = levenshtein_distance_found
                             output["technique"] = term
 
                     case _:
                         continue
 
         if list_of_technics != []:
-            all_technics = sorted(list_of_technics, key=lambda x: x["distance"])
+            all_technics = sorted(list_of_technics, key=lambda x: x["score"])
 
             nearest_technics = all_technics[slice(10)]
 

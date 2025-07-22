@@ -86,7 +86,7 @@ class Llm:
         self.model, self.tokenizer = accelerator.prepare(self.model, self.tokenizer)
         # Initialize the text generation pipeline
         self.pipe = pipeline(
-            "text-generation", model=self.model, tokenizer=self.tokenizer, temperature=0.62, top_p=0.98, top_k=11
+            "text-generation", model=self.model, tokenizer=self.tokenizer, temperature=0.35, top_p=0.98, top_k=11
         )
 
 

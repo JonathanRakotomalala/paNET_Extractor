@@ -43,6 +43,7 @@ class Ontology:
                 for i in classes:
                     myontology.append(
                         {
+                            "id":i.iri,
                             "label": "".join(i.label),
                             "altLabel": i.altLabel,
                             "subClassOf": Ontology.extract_subclass_of(i),

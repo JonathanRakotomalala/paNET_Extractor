@@ -5,42 +5,29 @@ from pydantic import BaseModel, Field
 from typing_extensions import Annotated
 from fastapi.responses import HTMLResponse
 from fastapi.openapi.utils import get_openapi
-
+from typing import List
 
 
 class TechniqueDetails(BaseModel):
-    label: str
-    altLabel: list[str]
-    subClassOf: dict
-    definition1: str
-    definition2: str
+    id: str = Field(examples=["http://purl.org/pan-science/PaNET/PaNET01320"])
+    label: str = Field(examples=["fourier transform infrared spectroscopy"])
+    altLabel: list[str] = Field(examples=[["FTIR"]])
+    subClassOf: dict = Field(examples=[{"PaNET00209": "interferometry technique",
+                                    "PaNET01109": "infrared spectroscopy"}])
+    definition1: str = Field(examples=[""])
+    definition2: str = Field(examples=["https://en.wikipedia.org/wiki/Fourier-transform_infrared_spectroscopy"])
 
 class Technique(BaseModel):
     technique: TechniqueDetails
+    score:float
 
 class TextTechnique(BaseModel):
-    inText: str
+    inText: str = Field(examples=["FTIR"])
     inPaNET: Technique
 
 
 class Result(BaseModel):
-    output: list[TextTechnique] = Field(
-        examples=[
-            [{
-                "inText": "Small-angle scattering",
-                "InPaNET": {
-                    "technique": {
-                        "label": "high resolution inelastic neutron scattering",
-                        "altLabel": [],
-                        "subClassOf": {
-                            "PaNET01042": "high energy resolution emission technique",
-                            "PaNET01245": "inelastic neutron spectroscopy",
-                        },
-                    }
-                },
-            }]
-        ]
-    )
+    output: List[TextTechnique] 
 
 
 class Message(BaseModel):
@@ -59,9 +46,9 @@ class Dois(BaseModel):
     dois:list[str]
 
 class DoiTechResponse(BaseModel):
-    doi:str
-    abstract:str 
-    techniques:Result|str
+    doi:str = Field(examples=["10.1073/pnas.2411406122"])
+    abstract:str = Field(examples = ["<jats:p>             Heterogeneous catalysts have emerged as a potential key for closing the carbon cycle by converting carbon dioxide (CO             <jats:sub>2</jats:sub>             ) into value-added chemicals. In this work, we report a highly active and stable ceria (CeO             <jats:sub>2</jats:sub>             )-based electronically tuned trimetallic catalyst for CO             <jats:sub>2</jats:sub>             to CO conversion. A unique distribution of electron density between the defective ceria support and the trimetallic nanoparticles (of Ni, Cu, Zn) was established by creating the strong metal support interaction (SMSI) between them. The catalyst showed CO productivity of 49,279 mmol g             <jats:sup>\u22121</jats:sup>             h             <jats:sup>\u22121</jats:sup>             at 650 \u00b0C. CO selectivity up to 99% and excellent stability (rate remained unchanged even after 100 h) stemmed from the synergistic interactions among Ni-Cu-Zn sites and their SMSI with the defective ceria support. High-energy-resolution fluorescence-detection X-ray absorption spectroscopy (HERFD-XAS) confirmed this SMSI, further corroborated by in situ electron energy loss spectroscopy (EELS) and density functional theory (DFT) simulations. The in situ studies (HERFD-XAS &amp; EELS) indicated the key role of oxygen vacancies of defective CeO             <jats:sub>2</jats:sub>             during catalysis. The in situ transmission electron microscopy (TEM) imaging under catalytic conditions visualized the movement and growth of active trimetallic sites, which completely stopped once SMSI was established. In situ FTIR (supported by DFT) provided a molecular-level understanding of the formation of various reaction intermediates and their conversion into products, which followed a complex coupling of direct dissociation and redox pathway assisted by hydrogen, simultaneously on different active sites. Thus, sophisticated manipulation of electronic properties of trimetallic sites and defect dynamics significantly enhanced catalytic performance during CO             <jats:sub>2</jats:sub>             to CO conversion.           </jats:p>"])
+    techniques:list[TextTechnique]|str
 
 class DoiTechResponses(BaseModel):
     outputs:list[DoiTechResponse]
