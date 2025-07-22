@@ -67,13 +67,14 @@ QUERY_3 = "Un outillage lithique acheuléen, une riche faune du Pléistocène mo
 
 
 class Llm:
-    # accelerator a huggingface library to optimize the model's execution
+    
 
-    ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")
+    ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN") #TOKEN TO CONNECT TO HUGGINGFACE
     # login to huggingface 
     login(token=ACCESS_TOKEN)
     pipe=None
     def __init__(self):
+        # accelerator a huggingface library to optimize the model's execution
         accelerator = Accelerator()
     # https://huggingface.co/docs/transformers.js/api/pipelines#pipelinestextgenerationpipeline
         # temperature : a paramater of the generation, but it can be used in pipeline if the llm model support auto-regressive generation : https://huggingface.co/docs/transformers.js/en/pipelines#natural-language-processing https://huggingface.co/docs/transformers.js/main/en/api/utils/generation#utilsgenerationgenerationconfigtype--code-object-code

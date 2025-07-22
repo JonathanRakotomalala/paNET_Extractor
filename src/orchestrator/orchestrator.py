@@ -10,8 +10,9 @@ import math
 
 
 class Orchestrator:
-    time_start =None
-    OpenAire()
+    
+    time_start =None#The time at which the user can restart to make a requests, None if error 429 has'nt occured yet
+    OpenAire()#initialize openaire
     
     llm_instance = Llm()
     def search(input: str):
@@ -80,7 +81,7 @@ class Orchestrator:
                             {"doi": j, "abstract": result, "techniques": techniques}
                         )
 
-                return {"outputs": my_list}
+                return {"algorithm":"Levenshtein's distance","outputs": my_list}
             # else we calculate the remaining time until we can make a request and we raise an exception
             else:
                 raise RateLimitError(str(math.ceil(Orchestrator.time_start-time.time())))

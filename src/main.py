@@ -51,6 +51,7 @@ class DoiTechResponse(BaseModel):
     techniques:list[TextTechnique]|str
 
 class DoiTechResponses(BaseModel):
+    algorithm:str = Field(examples=["Levenshtein's distance"])
     outputs:list[DoiTechResponse]
 
 
