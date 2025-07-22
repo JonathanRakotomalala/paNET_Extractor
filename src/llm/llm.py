@@ -68,24 +68,29 @@ QUERY_3 = "Un outillage lithique acheuléen, une riche faune du Pléistocène mo
 
 class Llm:
     # accelerator a huggingface library to optimize the model's execution
-    accelerator = Accelerator()
+
     ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")
     # login to huggingface 
     login(token=ACCESS_TOKEN)
-    model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-3B-Instruct", torch_dtype=torch.bfloat16, pad_token_id=0)
-    tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-3B-Instruct")
-    model, tokenizer = accelerator.prepare(model, tokenizer)
- # https://huggingface.co/docs/transformers.js/api/pipelines#pipelinestextgenerationpipeline
-    # temperature : a paramater of the generation, but it can be used in pipeline if the llm model support auto-regressive generation : https://huggingface.co/docs/transformers.js/en/pipelines#natural-language-processing https://huggingface.co/docs/transformers.js/main/en/api/utils/generation#utilsgenerationgenerationconfigtype--code-object-code
-     #top_k : The number of highest probability vocabulary tokens to keep for top-k-filtering
-     #top_p :  Default value i s 1. If set to float < 1, only the smallest set of most probable tokens with probabilities that add up to top_p or higher are kept for generation.
-     #prompt_lookup_num_tokens : The number of tokens to be output as candidate tokens. https://huggingface.co/docs/transformers/main/en/main_classes/text_generation#transformers.GenerationConfig.prompt_lookup_num_tokens
-     # for more information about text generation and the parameters : https://huggingface.co/docs/transformers/main_classes/text_generation
-    pipe = pipeline(
-        "text-generation",model =model, tokenizer = tokenizer,temperature = 0.62, top_p=0.98,top_k=11,prompt_lookup_num_tokens = 3
-    )
+    pipe=None
+    def __init__(self):
+        accelerator = Accelerator()
+    # https://huggingface.co/docs/transformers.js/api/pipelines#pipelinestextgenerationpipeline
+        # temperature : a paramater of the generation, but it can be used in pipeline if the llm model support auto-regressive generation : https://huggingface.co/docs/transformers.js/en/pipelines#natural-language-processing https://huggingface.co/docs/transformers.js/main/en/api/utils/generation#utilsgenerationgenerationconfigtype--code-object-code
+        #top_k : The number of highest probability vocabulary tokens to keep for top-k-filtering
+        #top_p :  Default value i s 1. If set to float < 1, only the smallest set of most probable tokens with probabilities that add up to top_p or higher are kept for generation.
+        #prompt_lookup_num_tokens : The number of tokens to be output as candidate tokens. https://huggingface.co/docs/transformers/main/en/main_classes/text_generation#transformers.GenerationConfig.prompt_lookup_num_tokens
+        # for more information about text generation and the parameters : https://huggingface.co/docs/transformers/main_classes/text_generation
+        self.model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-3B-Instruct",torch_dtype=torch.bfloat16, pad_token_id=0)
+        self.tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-3B-Instruct")
+        self.model, self.tokenizer = accelerator.prepare(self.model, self.tokenizer)
+        # Initialize the text generation pipeline
+        self.pipe = pipeline(
+            "text-generation", model=self.model, tokenizer=self.tokenizer, temperature=0.62, top_p=0.98, top_k=11
+        )
 
-    def llm_run(input: str):
+
+    def llm_run(self,input: str):
         """Download or Load the model locally then make an infering
 
         Args:
@@ -97,7 +102,7 @@ class Llm:
             {"role": "user", "content": DOCUMENT_METADATA_EXTRACTION + input},
         ]
         # make the model generate an answer
-        answer = Llm.pipe(messages)
+        answer = self.pipe(messages)
 
         print(answer)
 
