@@ -27,6 +27,7 @@ class TextTechnique(BaseModel):
 
 
 class Result(BaseModel):
+    algorithm: str = Field(examples=["Levenshtein's distance"])
     output: List[TextTechnique] 
 
 
