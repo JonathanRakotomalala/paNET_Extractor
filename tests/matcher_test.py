@@ -24,13 +24,14 @@ class TestClass(unittest.TestCase):
                 "subClassOf": {"PaNET01020": "elastic scattering"},
                 "definition1": "",
                 "definition2": "https://en.wikipedia.org/wiki/Diffraction",
+                "id":"http://purl.org/pan-science/PaNET/PaNET01022"
             },
-            "distance": 0.0,
+            "score": 0.0,
         }
 
     def test_matcher_almost_found(self):
         result = MatchMapper.my_matcher("JISANS", self.my_ontology)
-        assert result["ten first"][1]["distance"] == 0.1667
+        assert result["ten first"][1]["score"] == 0.1667
         assert result["ten first"][0] == {
             "technique": {
                 "label": "grazing incidence small angle neutron scattering",
@@ -41,8 +42,9 @@ class TestClass(unittest.TestCase):
                 },
                 "definition1": "",
                 "definition2": "https://en.wikipedia.org/wiki/Grazing-incidence_small-angle_scattering",
+                "id":"http://purl.org/pan-science/PaNET/PaNET01276"
             },
-            "distance": 0.1667,
+            "score": 0.1667,
         }
 
     def test_matcher_not_found(self):

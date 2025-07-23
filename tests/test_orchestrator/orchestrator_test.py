@@ -9,33 +9,33 @@ import time
 
 def test_orchestrator_search_from_text_success(mocker):
     mocker.patch("src.llm.Llm.llm_run",return_value = "{\"techniques\": [\"small-angle scattering\"]}")
-    mocker.patch("src.matchmapper.MatchMapper.map_to_panet",return_value =  [{"inText":"Small angle scattering","inPaNET":{"techniques": ["small-angle scattering"]}}])
+    mocker.patch("src.matchmapper.MatchMapper.map_to_panet",return_value =  [{"inText":"small-angle scattering","inPaNET":{"technique": {"small-angle scattering"}},"score":0.0}])
     result = Orchestrator.search("fffff")
 
     Llm.llm_run.assert_called_once_with("fffff")
     MatchMapper.map_to_panet.assert_called_once_with({"techniques": ["small-angle scattering"]})
 
-    assert result == {"output":[{"inPaNET":{"techniques": ["small-angle scattering"]},"inText":"Small angle scattering"}]}
+    assert result == {"algorithm":"Levenshtein's distance","output":[{"inPaNET":{"technique": {"small-angle scattering"}},"inText":"small-angle scattering","score":0.0}]}
 
 
 def test_orchestrator_list_search_from_dois_success(mocker):
     Orchestrator.time_start=None
     mocker.patch("src.openaire.OpenAire.get_abstract_from_doi", return_value="fffff")
-    mocker.patch("src.orchestrator.Orchestrator.search",return_value = {"output":[{"inPaNET":{"techniques": ["small-angle scattering"]},"inText":"Small angle scattering"}]})
+    mocker.patch("src.orchestrator.Orchestrator.search",return_value = {"algorithm":"Levenshtein's distance","output":[{"inPaNET":{"technique": {"small-angle scattering"}},"inText":"small-angle scattering","score":0.0}]})
 
     result = Orchestrator.list_search([("dois",["12345"])])
 
     Orchestrator.search.assert_called_with("fffff")
     OpenAire.get_abstract_from_doi.assert_called_with("12345")
 
-    assert result == {"outputs":[{"doi":"12345","abstract":"fffff","techniques":{"output":[{"inPaNET":{"techniques": ["small-angle scattering"]},"inText":"Small angle scattering"}]}}]}
+    assert result == {"algorithm":"Levenshtein's distance","outputs":[{"doi":"12345","abstract":"fffff","techniques":[{"inPaNET":{"technique": {"small-angle scattering"}},"inText":"small-angle scattering","score":0.0}]}]}
 
 def test_orchestrator_list_search_no_abstract(mocker):
     mocker.patch("src.openaire.OpenAire.get_abstract_from_doi",return_value = "No abstract available")
 
     result = Orchestrator.list_search([('doi',['12345'])])
     
-    assert result == {'outputs':[{"doi": '12345', "abstract": "No abstract available", "techniques": {"output":[]}}]}
+    assert result == {"algorithm":"Levenshtein's distance",'outputs':[{"doi": '12345', "abstract": "No abstract available", "techniques": []}]}
 
 def test_orchestrator_search_EmptyOntologyError(mocker):
     mocker.patch("src.llm.Llm.llm_run",return_value = "\"techniques\": [\"small-angle scattering\"]")
@@ -63,7 +63,7 @@ def test_orchestrator_list_search_no_techniques_when_search_raises_exceptions(mo
                 ))
     result =    Orchestrator.list_search([("doi",["12345"])])
 
-    assert result['outputs'][0]['techniques']== {'output':[]}
+    assert result['outputs'][0]['techniques']== []
 
 
 

@@ -39,7 +39,7 @@ class Orchestrator:
         extracted_techniques = Orchestrator.llm_instance.llm_run(input)
         try:
             data = json.loads(extracted_techniques)
-            return {"algorithm":"Levehenshtein's distance","output": MatchMapper.map_to_panet(data)}
+            return {"algorithm":"Levenshtein's distance","output": MatchMapper.map_to_panet(data)}
         except (json.JSONDecodeError, EmptyOntologyError,OntologyNotFoundError) as e:
             if isinstance(e, EmptyOntologyError) or isinstance(e,OntologyNotFoundError):
                 raise HTTPException(

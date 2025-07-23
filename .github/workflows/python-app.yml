@@ -39,6 +39,7 @@ jobs:
         uv run ruff check --output-format=github .
     - name: Test with pytest
       env:
+        USER_AGENT_MAIL: ${{ env.USER_AGENT_MAIL}}
         OPEN_AIRE_REFRESH_ACCESS_TOKEN: ${{ secrets.OPEN_AIRE_REFRESH_ACCESS_TOKEN}}
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run: |

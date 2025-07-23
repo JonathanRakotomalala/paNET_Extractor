@@ -4,6 +4,7 @@ import os
 import requests
 
 
+
 class AbstractImportError(Exception):
     def __init__(self,message="OpenAire Error"):
         self.message = message 
@@ -28,19 +29,17 @@ class OpenAire:
             openaire_token : A str used for authenticating API requests.
             user_agent_mail : A str that represent the user's email
     """
-
-    openaire_token = None
-    USER_AGENT_MAIL = None
+    _openaire_token = None
+    USER_AGENT_MAIL =os.environ.get('USER_AGENT_MAIL')
     def __init__(self):
+        
         #OPEN_AIRE_REFRESH_ACCESS_TOKEN is a token that permits to get an hour token for authenticated request to have 7200 requests/h 
         # instead of  60 requests/h (https://graph.openaire.eu/docs/apis/terms) : https://graph.openaire.eu/docs/apis/authentication#personal-access-token
         OPEN_AIRE_REFRESH_ACCESS_TOKEN = os.environ.get("OPEN_AIRE_REFRESH_ACCESS_TOKEN")
-        self.USER_AGGENT_MAIL = os.environ.get("USER_AGENT_MAIL")
-        print(self.USER_AGENT_MAIL)
         response_token = requests.get("https://services.openaire.eu/uoa-user-management/api/users/getAccessToken?refreshToken="+OPEN_AIRE_REFRESH_ACCESS_TOKEN)
 
         if response_token.status_code == 200:
-            OpenAire.openaire_token = response_token.json()["access_token"]
+            OpenAire._openaire_token = response_token.json()["access_token"]
         else:
             raise AbstractImportError("Invalid OpenAire Access Token")
     
@@ -59,7 +58,7 @@ class OpenAire:
         """
         url_link = "https://api.openaire.eu/graph/v1/researchProducts?pid="+doi
 
-        response = requests.get(url_link,headers={"Authorization":"Bearer "+OpenAire.openaire_token,"User-Agent":"PaNetExtractor/1.0.0 ("+OpenAire.USER_AGENT_MAIL+")"})
+        response = requests.get(url_link,headers={"Authorization":"Bearer "+OpenAire._openaire_token,"User-Agent":"PaNetExtractor/1.0.0 ("+OpenAire.USER_AGENT_MAIL+")"})
         time_start = time.time()
 
         if response.status_code == 200 and response.json()['header']['numFound']>0:
