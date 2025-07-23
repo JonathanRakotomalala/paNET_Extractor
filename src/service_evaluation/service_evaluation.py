@@ -13,7 +13,9 @@ LENGTH = len("https://doi.org/")
 
 
 class ServiceEvaluation:
-    
+    """
+        Evaluates the services by using it on samples
+    """
     async def evaluate_service():
         """Evaluate the service that extracts technics from the dois of publication from the year 2025 (from openalex api)"""
         # to make asynchronous operations
@@ -57,7 +59,7 @@ class ServiceEvaluation:
                 response = appclient.post(
                     url="http://127.0.0.1:8000/dois_to_techniques/",
                     headers={
-                        "Authorization": "Bearer "+OpenAire.TOKEN,
+                        "Authorization": "Bearer "+OpenAire.openaire_token,
                         "User-Agent": "PaNetExtractor/1.0.0 (jonathan.rakotomalala@esrf.fr)",
                         "Content-type": "application/json",
                         "Accept": "application/json",

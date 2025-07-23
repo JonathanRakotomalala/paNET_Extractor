@@ -67,12 +67,19 @@ QUERY_3 = "Un outillage lithique acheuléen, une riche faune du Pléistocène mo
 
 
 class Llm:
-    
+    """
+        Manages the llm import from huggingface and the llm inference
+
+        Attributes:
+            ACCESS_TOKEN: A str used to login to huggingface
+            pipe: Pipeline to make llm inference, default to None
+    """
 
     ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN") #TOKEN TO CONNECT TO HUGGINGFACE
     # login to huggingface 
     login(token=ACCESS_TOKEN)
     pipe=None
+
     def __init__(self):
         # accelerator a huggingface library to optimize the model's execution
         accelerator = Accelerator()
@@ -92,7 +99,7 @@ class Llm:
 
 
     def llm_run(self,input: str):
-        """Download or Load the model locally then make an infering
+        """Downloads or Load the model locally then make an infering
 
         Args:
            input a string, the user's text

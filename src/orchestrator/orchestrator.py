@@ -10,6 +10,13 @@ import math
 
 
 class Orchestrator:
+    """
+        Orchestrates the operations for techniques extraction
+        
+        Attributes:
+            time_start: A float that represent the time at which the user cans start requests, default to None
+            llm_instance: Instance of the Llm class
+    """
     
     time_start =None#The time at which the user can restart to make a requests, None if error 429 has'nt occured yet
     OpenAire()#initialize openaire
@@ -47,7 +54,7 @@ class Orchestrator:
 
     def list_search(doi_list):
         """
-            Get the doi's abstract and search teh techniques
+            Gets the doi's abstract and search teh techniques
 
             Args:
                 doi_list: a list of str 

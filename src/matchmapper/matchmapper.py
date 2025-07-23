@@ -6,24 +6,30 @@ MAXIMUM_INTEGER = 2147483647
 
 
 class MatchMapper:
+    """
+        Makes the matching and the mapping of techniques 
+    """
+
     def my_matcher(input: str, terms):
-        """ " match the input to a term inside the list of terms
+        """  matches the input to a term inside the list of terms
 
         Args :
             input: a string
-            terms: a list of term
+            terms: a list of terms
 
         Returns :
             the term that have the highest proximity or None
 
         """
         my_func = rapidfuzz.distance.Levenshtein.normalized_distance #the rapidfuzz distance function to use for the matching
+
         minimum = MAXIMUM_INTEGER
         distance_found = minimum
         output = {"technique": None, "score": None}
         is_upper_case = input.isupper()
         list_of_technics = []
         nearest_technics = None
+
         if len(input) > 0:
             for term in terms:
                 label_exist = term["label"] != ""

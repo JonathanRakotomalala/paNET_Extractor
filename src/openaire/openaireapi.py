@@ -21,21 +21,32 @@ class RateLimitError(Exception):
         return f'{self.message+self.retry}'
 
 class OpenAire:
+    """
+        Manages the authentication and interactions with OpenAire search products API
 
-    TOKEN = None
+        Attributes:
+            openaire_token : A str used for authenticating API requests.
+            user_agent_mail : A str that represent the user's email
+    """
 
+    openaire_token = None
+    USER_AGENT_MAIL = None
     def __init__(self):
+        #OPEN_AIRE_REFRESH_ACCESS_TOKEN is a token that permits to get an hour token for authenticated request to have 7200 requests/h 
+        # instead of  60 requests/h (https://graph.openaire.eu/docs/apis/terms) : https://graph.openaire.eu/docs/apis/authentication#personal-access-token
         OPEN_AIRE_REFRESH_ACCESS_TOKEN = os.environ.get("OPEN_AIRE_REFRESH_ACCESS_TOKEN")
+        self.USER_AGGENT_MAIL = os.environ.get("USER_AGENT_MAIL")
+        print(self.USER_AGENT_MAIL)
         response_token = requests.get("https://services.openaire.eu/uoa-user-management/api/users/getAccessToken?refreshToken="+OPEN_AIRE_REFRESH_ACCESS_TOKEN)
 
         if response_token.status_code == 200:
-            OpenAire.TOKEN = response_token.json()["access_token"]
+            OpenAire.openaire_token = response_token.json()["access_token"]
         else:
             raise AbstractImportError("Invalid OpenAire Access Token")
     
     def call_open_aire(doi):
         """
-            call OpenAire search products API to get informations from the doi
+            calls OpenAire search products API to get informations from the doi
 
             Args:
                 doi: a string that represent a DOI
@@ -48,7 +59,7 @@ class OpenAire:
         """
         url_link = "https://api.openaire.eu/graph/v1/researchProducts?pid="+doi
 
-        response = requests.get(url_link,headers={"Authorization":"Bearer "+OpenAire.TOKEN,"User-Agent":"PaNetExtractor/1.0.0 (jonathan.rakotomalala@esrf.fr)"})
+        response = requests.get(url_link,headers={"Authorization":"Bearer "+OpenAire.openaire_token,"User-Agent":"PaNetExtractor/1.0.0 ("+OpenAire.USER_AGENT_MAIL+")"})
         time_start = time.time()
 
         if response.status_code == 200 and response.json()['header']['numFound']>0:
@@ -68,7 +79,7 @@ class OpenAire:
 
     def get_abstract_from_doi(doi):
         """
-            get the abstract with openaire's api 
+            gets the abstract with openaire's api 
 
             Args:
                 doi: a string that represent the digital object identifier
