@@ -2,19 +2,26 @@
 
 Points out techniques from scientific texts and maps them into the PaNET ontology terms with all details.
 
+
 ## Setting up environment
-Use [uv](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer)  to create the virtual environment and [pip](https://pip.pypa.io/en/stable/) to install new packages if needed.</br>
-uv sync to install all dependencies defined in the project.
+
+Use [uv](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer) to create the virtual environment
+and [pip](https://pip.pypa.io/en/stable/) to install new packages.
+
+Execute `uv sync` to install all dependencies defined in the project.
+
 
 ## Project structure
-In the src directory there are 7 packages:</br>
-1. scorerapidfuzz: calculate the distance between strings with rapidfuzz</br>
-2. llm: string extraction from text</br>
-3. matchmapper: match the techniques with terms</br>
-4. ontology: import paNET ontology</br>
-5. openaire: import abstract from DOIs using OpenAire API</br>
-6. orchestrator: orchestrate all the operations for techniques extraction</br>
-7. service_evaluation: a script to evaluate the service with a list of random DOIs</br>
+
+In the `src` directory there are 7 packages:
+1. `scorerapidfuzz`: calculate the distance between strings with rapidfuzz
+2. `llm`: string extraction from text
+3. `matchmapper`: match the techniques with terms
+4. `ontology`: import paNET ontology
+5. `openaire`: import abstract from DOIs using OpenAire API
+6. `orchestrator`: orchestrate all the operations for techniques extraction
+7. `service_evaluation`: a script to evaluate the service with a list of random DOIs
+
 
 ## Contributing
 
