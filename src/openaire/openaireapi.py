@@ -43,7 +43,7 @@ class OpenAire:
             + OPEN_AIRE_REFRESH_ACCESS_TOKEN
         )
 
-        if response_token.status_code ==200:
+        if response_token.status_code == 200:
             OpenAire._openaire_token = response_token.json()["access_token"]
         else:
             raise AbstractImportError("Invalid OpenAire Access Token")
