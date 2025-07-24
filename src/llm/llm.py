@@ -1,13 +1,14 @@
 import textwrap
 import torch
+
 # from src.main import my_llm
-from transformers import pipeline,AutoModelForCausalLM,AutoTokenizer
+from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
 import os
 from huggingface_hub import login
 from accelerate import Accelerator
-from dotenv import find_dotenv,load_dotenv
+from dotenv import find_dotenv, load_dotenv
 
-#find the .env then load the environment secrets and variables 
+# find the .env then load the environment secrets and variables
 load_dotenv(find_dotenv())
 
 DOCUMENT_SUMMARY = textwrap.dedent("""
@@ -72,38 +73,47 @@ QUERY_3 = "Un outillage lithique acheuléen, une riche faune du Pléistocène mo
 
 class Llm:
     """
-        Manages the llm import from huggingface and the llm inference
+    Manages the llm import from huggingface and the llm inference
 
-        Attributes:
-            ACCESS_TOKEN: A str used to login to huggingface
-            pipe: Pipeline to make llm inference, default to None
+    Attributes:
+        ACCESS_TOKEN: A str used to login to huggingface
+        pipe: Pipeline to make llm inference, default to None
     """
 
-
-    _ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN") #TOKEN TO CONNECT TO HUGGINGFACE
-    # login to huggingface 
+    _ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")  # TOKEN TO CONNECT TO HUGGINGFACE
+    # login to huggingface
     login(token=_ACCESS_TOKEN)
-    pipe=None
+    pipe = None
 
     def __init__(self):
         # accelerator a huggingface library to optimize the model's execution
         accelerator = Accelerator()
-    # https://huggingface.co/docs/transformers.js/api/pipelines#pipelinestextgenerationpipeline
+        # https://huggingface.co/docs/transformers.js/api/pipelines#pipelinestextgenerationpipeline
         # temperature : a paramater of the generation, but it can be used in pipeline if the llm model support auto-regressive generation : https://huggingface.co/docs/transformers.js/en/pipelines#natural-language-processing https://huggingface.co/docs/transformers.js/main/en/api/utils/generation#utilsgenerationgenerationconfigtype--code-object-code
-        #top_k : The number of highest probability vocabulary tokens to keep for top-k-filtering
-        #top_p :  Default value i s 1. If set to float < 1, only the smallest set of most probable tokens with probabilities that add up to top_p or higher are kept for generation.
-        #prompt_lookup_num_tokens : The number of tokens to be output as candidate tokens. https://huggingface.co/docs/transformers/main/en/main_classes/text_generation#transformers.GenerationConfig.prompt_lookup_num_tokens
+        # top_k : The number of highest probability vocabulary tokens to keep for top-k-filtering
+        # top_p :  Default value i s 1. If set to float < 1, only the smallest set of most probable tokens with probabilities that add up to top_p or higher are kept for generation.
+        # prompt_lookup_num_tokens : The number of tokens to be output as candidate tokens. https://huggingface.co/docs/transformers/main/en/main_classes/text_generation#transformers.GenerationConfig.prompt_lookup_num_tokens
         # for more information about text generation and the parameters : https://huggingface.co/docs/transformers/main_classes/text_generation
-        self.model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-3B-Instruct",torch_dtype=torch.bfloat16, pad_token_id=0)
-        self.tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-3B-Instruct")
+        self.model = AutoModelForCausalLM.from_pretrained(
+            "meta-llama/Llama-3.2-3B-Instruct",
+            torch_dtype=torch.bfloat16,
+            pad_token_id=0,
+        )
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            "meta-llama/Llama-3.2-3B-Instruct"
+        )
         self.model, self.tokenizer = accelerator.prepare(self.model, self.tokenizer)
         # Initialize the text generation pipeline
         self.pipe = pipeline(
-            "text-generation", model=self.model, tokenizer=self.tokenizer, temperature=0.35, top_p=0.98, top_k=11
+            "text-generation",
+            model=self.model,
+            tokenizer=self.tokenizer,
+            temperature=0.35,
+            top_p=0.98,
+            top_k=11,
         )
 
-
-    def llm_run(self,input: str):
+    def llm_run(self, input: str):
         """Downloads or Load the model locally then make an infering
 
         Args:
@@ -119,7 +129,7 @@ class Llm:
 
         print(answer)
 
-        # get the answer generated 
+        # get the answer generated
         response = answer[0]["generated_text"][1]["content"]
 
         return response

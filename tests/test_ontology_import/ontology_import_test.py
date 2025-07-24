@@ -1,6 +1,11 @@
-from src.ontology.ontology_import import Ontology,EmptyOntologyError,OntologyNotFoundError
+from src.ontology.ontology_import import (
+    Ontology,
+    EmptyOntologyError,
+    OntologyNotFoundError,
+)
 import pytest
 from owlready2 import base
+
 
 def test_load_ontology(mocker):
     mock_get_ontology = mocker.patch("owlready2.get_ontology")
@@ -36,26 +41,28 @@ def test_load_ontology(mocker):
 
     assert len(results) > 0
 
+
 def test_ontology_empty(mocker):
     mock = mocker.Mock()
     mock.load.return_value = []
     mock.classes.return_value = []
-    mocker.patch("owlready2.get_ontology",return_value = mock) 
+    mocker.patch("owlready2.get_ontology", return_value=mock)
 
     with pytest.raises(EmptyOntologyError):
         Ontology.getting_ontology()
 
+
 def test_fail_path_is_invalid(mocker):
-    mocker.patch("owlready2.get_ontology",side_effect = FileNotFoundError)
+    mocker.patch("owlready2.get_ontology", side_effect=FileNotFoundError)
 
     with pytest.raises(OntologyNotFoundError):
         Ontology.getting_ontology()
 
+
 def test_failed_to_load_ontology(mocker):
     mock = mocker.Mock()
     mock.load.side_effect = base.OwlReadyOntologyParsingError
-    mocker.patch("owlready2.get_ontology",return_value=mock)
+    mocker.patch("owlready2.get_ontology", return_value=mock)
 
     with pytest.raises(EmptyOntologyError):
         Ontology.getting_ontology()
-

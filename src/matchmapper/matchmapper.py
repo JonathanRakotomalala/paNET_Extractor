@@ -1,17 +1,17 @@
-
 from ..ontology.ontology_import import Ontology
 import rapidfuzz
-from ..scorerapidfuzz import get_altlabels_normalized_distances,get_normalized_distance
+from ..scorerapidfuzz import get_altlabels_normalized_distances, get_normalized_distance
+
 MAXIMUM_INTEGER = 2147483647
 
 
 class MatchMapper:
     """
-        Makes the matching and the mapping of techniques 
+    Makes the matching and the mapping of techniques
     """
 
     def my_matcher(input: str, terms):
-        """  matches the input to a term inside the list of terms
+        """matches the input to a term inside the list of terms
 
         Args :
             input: a string
@@ -21,7 +21,9 @@ class MatchMapper:
             the term that have the highest proximity or None
 
         """
-        my_func = rapidfuzz.distance.Levenshtein.normalized_distance #the rapidfuzz distance function to use for the matching
+        my_func = (
+            rapidfuzz.distance.Levenshtein.normalized_distance
+        )  # the rapidfuzz distance function to use for the matching
 
         minimum = MAXIMUM_INTEGER
         distance_found = minimum
@@ -30,7 +32,7 @@ class MatchMapper:
         list_of_technics = []
         nearest_technics = None
 
-        #the algorithm below only works for distance between terms
+        # the algorithm below only works for distance between terms
         if len(input) > 0:
             for term in terms:
                 label_exist = term["label"] != ""
@@ -38,21 +40,25 @@ class MatchMapper:
                 # if input is an acronym just check altlabels
                 if is_upper_case and alt_label_exist:
                     list_of_distances = list(
-                        get_altlabels_normalized_distances(input, term["altLabel"],my_func)
+                        get_altlabels_normalized_distances(
+                            input, term["altLabel"], my_func
+                        )
                     )
                     distance_found = min(list_of_distances)
                 # if not an acronym and no alt label check the label
                 elif not (is_upper_case) and label_exist and not (alt_label_exist):
                     distance_found = get_normalized_distance(
-                        input, term["label"],my_func
+                        input, term["label"], my_func
                     )
                 # if not an cronym and alt label check label and alt label
                 elif not (is_upper_case) and label_exist and alt_label_exist:
                     distance_found_a = get_normalized_distance(
-                        input, term["label"],my_func
+                        input, term["label"], my_func
                     )
                     distances_found_b = list(
-                        get_altlabels_normalized_distances(input, term["altLabel"],my_func)
+                        get_altlabels_normalized_distances(
+                            input, term["altLabel"], my_func
+                        )
                     )
                     distances_found_b.append(distance_found_a)
                     distance_found = min(distances_found_b)
@@ -81,11 +87,11 @@ class MatchMapper:
 
     def map_to_panet(my_json):
         """
-            Map the techniques to the paNET ontology
-            Args : 
-                my_json a json 
-            Returns :
-                a list of the technics in the json and it nearest terms in paNET
+        Map the techniques to the paNET ontology
+        Args :
+            my_json a json
+        Returns :
+            a list of the technics in the json and it nearest terms in paNET
         """
         my_ontology = Ontology.getting_ontology()
         my_list = []
@@ -100,4 +106,3 @@ class MatchMapper:
                     "________________________________________________________________________\n"
                 )
         return my_list
-

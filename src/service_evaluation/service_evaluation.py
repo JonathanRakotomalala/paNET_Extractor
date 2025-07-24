@@ -1,4 +1,3 @@
-
 import random
 import math
 import httpx
@@ -13,8 +12,9 @@ LENGTH = len("https://doi.org/")
 
 class ServiceEvaluation:
     """
-        Evaluates the services by using it on samples
+    Evaluates the services by using it on samples
     """
+
     async def evaluate_service():
         """Evaluate the service that extracts technics from the dois of publication from the year 2025 (from openalex api)"""
         # to make asynchronous operations
@@ -24,20 +24,19 @@ class ServiceEvaluation:
             LINK,
         )
         if response.status_code == 200:
-
             meta = response.json()["meta"]
-            nb_page = math.ceil(meta["count"] / meta["per_page"]) #calculate the total number of page 
+            nb_page = math.ceil(
+                meta["count"] / meta["per_page"]
+            )  # calculate the total number of page
             my_doi_list = []
 
             open_alex_requests = []
             print(nb_page)
-            #iterate on the pages
+            # iterate on the pages
             for i in range(1, nb_page + 1):
-                
                 open_alex_requests.append(client.get(LINK + "&page=" + str(i)))
             # wait for alle the requests to end
             responses = await asyncio.gather(*open_alex_requests)
-
 
             # treat all answers => get all dois and pass onto the next if no doi
             for page_response in responses:
@@ -62,23 +61,21 @@ class ServiceEvaluation:
                         "Accept": "application/json",
                     },
                     json={"dois": sample_dois},
-                    timeout=None
+                    timeout=None,
                 )
                 if response.status_code == 200:
                     with open("tests/data/results.json", "w") as file:
                         file.write(json.dumps(response.json()))
-                else :
+                else:
                     print(f"Erreur HTTP {response.status_code}: {response.text}")
                     print(response.status_code)
                     print(response.json())
             await client.aclose()
-        
-
-
 
 
 async def main():
     await ServiceEvaluation.evaluate_service()
+
 
 if __name__ == "__main__":
     asyncio.run(main())

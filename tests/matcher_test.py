@@ -24,7 +24,7 @@ class TestClass(unittest.TestCase):
                 "subClassOf": {"PaNET01020": "elastic scattering"},
                 "definition1": "",
                 "definition2": "https://en.wikipedia.org/wiki/Diffraction",
-                "id":"http://purl.org/pan-science/PaNET/PaNET01022"
+                "id": "http://purl.org/pan-science/PaNET/PaNET01022",
             },
             "score": 0.0,
         }
@@ -42,7 +42,7 @@ class TestClass(unittest.TestCase):
                 },
                 "definition1": "",
                 "definition2": "https://en.wikipedia.org/wiki/Grazing-incidence_small-angle_scattering",
-                "id":"http://purl.org/pan-science/PaNET/PaNET01276"
+                "id": "http://purl.org/pan-science/PaNET/PaNET01276",
             },
             "score": 0.1667,
         }
