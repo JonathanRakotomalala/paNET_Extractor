@@ -6,9 +6,6 @@ from typing_extensions import Annotated
 from fastapi.responses import HTMLResponse
 from fastapi.openapi.utils import get_openapi
 from typing import List
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 class TechniqueDetails(BaseModel):

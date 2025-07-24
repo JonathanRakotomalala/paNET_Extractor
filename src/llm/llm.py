@@ -5,6 +5,10 @@ from transformers import pipeline,AutoModelForCausalLM,AutoTokenizer
 import os
 from huggingface_hub import login
 from accelerate import Accelerator
+from dotenv import find_dotenv,load_dotenv
+
+#find the .env then load the environment secrets and variables 
+load_dotenv(find_dotenv())
 
 DOCUMENT_SUMMARY = textwrap.dedent("""
    Given a synchrotron-based scientific document, create a very concise yet comprehensive summary in proper scientific prose. Your summary should follow this structure:
@@ -74,6 +78,7 @@ class Llm:
             ACCESS_TOKEN: A str used to login to huggingface
             pipe: Pipeline to make llm inference, default to None
     """
+
 
     ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN") #TOKEN TO CONNECT TO HUGGINGFACE
     # login to huggingface 

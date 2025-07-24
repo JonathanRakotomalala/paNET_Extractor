@@ -7,7 +7,7 @@ Use [uv](https://docs.astral.sh/uv/getting-started/installation/#standalone-inst
 uv sync to install all dependencies defined in the project.
 
 ## Project structure
-In the src directory there are 7 modules:</br>
+In the src directory there are 7 packages:</br>
 1. scorerapidfuzz: calculate the distance between strings with rapidfuzz</br>
 2. llm: string extraction from text</br>
 3. matchmapper: match the techniques with terms</br>
