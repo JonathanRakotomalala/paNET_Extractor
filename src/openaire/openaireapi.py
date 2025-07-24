@@ -25,12 +25,12 @@ class OpenAire:
         Manages the authentication and interactions with OpenAire search products API
 
         Attributes:
-            openaire_token : A str used for authenticating API requests.
+            _openaire_token : A str used for authenticating API requests.
             user_agent_mail : A str that represent the user's email
     """
     
     _openaire_token = None
-    USER_AGENT_MAIL =os.getenv('USER_AGENT_MAIL')
+    _USER_AGENT_MAIL =os.getenv('USER_AGENT_MAIL')
     def __init__(self):
 
         
@@ -59,7 +59,7 @@ class OpenAire:
         """
         url_link = "https://api.openaire.eu/graph/v1/researchProducts?pid="+doi
 
-        response = requests.get(url_link,headers={"Authorization":"Bearer "+OpenAire._openaire_token,"User-Agent":"PaNetExtractor/1.0.0 ("+OpenAire.USER_AGENT_MAIL+")"})
+        response = requests.get(url_link,headers={"Authorization":"Bearer "+OpenAire._openaire_token,"User-Agent":"PaNetExtractor/1.0.0 ("+OpenAire._USER_AGENT_MAIL+")"})
         time_start = time.time()
 
         if response.status_code == 200 and response.json()['header']['numFound']>0:

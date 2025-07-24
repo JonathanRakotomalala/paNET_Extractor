@@ -80,9 +80,9 @@ class Llm:
     """
 
 
-    ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN") #TOKEN TO CONNECT TO HUGGINGFACE
+    _ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN") #TOKEN TO CONNECT TO HUGGINGFACE
     # login to huggingface 
-    login(token=ACCESS_TOKEN)
+    login(token=_ACCESS_TOKEN)
     pipe=None
 
     def __init__(self):

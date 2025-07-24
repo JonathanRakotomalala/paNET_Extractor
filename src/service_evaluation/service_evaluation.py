@@ -3,7 +3,6 @@ import random
 import math
 import httpx
 import asyncio
-from src.openaire import OpenAire
 import json
 from fastapi.testclient import TestClient
 from src.main import app
@@ -53,14 +52,12 @@ class ServiceEvaluation:
             sample_dois = random.sample(my_doi_list, min(4, len(my_doi_list)))
             print(f"3 selected : {sample_dois}")
             # retrieve the token for openaire authentication
-            OpenAire()
+            # OpenAire()
             # make a request to our service
             with TestClient(app) as appclient:
                 response = appclient.post(
                     url="http://127.0.0.1:8000/dois_to_techniques/",
                     headers={
-                        "Authorization": "Bearer "+OpenAire.openaire_token,
-                        "User-Agent": "PaNetExtractor/1.0.0 (jonathan.rakotomalala@esrf.fr)",
                         "Content-type": "application/json",
                         "Accept": "application/json",
                     },

@@ -30,6 +30,7 @@ class MatchMapper:
         list_of_technics = []
         nearest_technics = None
 
+        #the algorithm below only works for distance between terms
         if len(input) > 0:
             for term in terms:
                 label_exist = term["label"] != ""
