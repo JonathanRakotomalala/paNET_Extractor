@@ -7,7 +7,7 @@ MAXIMUM_INTEGER = 2147483647
 
 class MatchMapper:
     """
-    Makes the matching and the mapping of techniques
+    Makes the matching and the mapping of techniques using normalizing distance function from rapidfuzz
     """
 
     def my_matcher(input: str, terms):
