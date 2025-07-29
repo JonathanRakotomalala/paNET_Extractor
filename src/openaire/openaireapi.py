@@ -27,12 +27,12 @@ class OpenAire:
     Manages the authentication and interactions with OpenAire search products API
 
     Attributes:
-        _openaire_token : A str used for authenticating API requests.
+        openaire_token : A str used for authenticating API requests.
         user_agent_mail : A str that represent the user's email
     """
 
-    _openaire_token = None
-    _USER_AGENT_MAIL = os.getenv("USER_AGENT_MAIL")
+    openaire_token = None
+    USER_AGENT_MAIL = os.getenv("USER_AGENT_MAIL")
 
     def __init__(self):
         # OPEN_AIRE_REFRESH_ACCESS_TOKEN is a token that permits to get an hour token for authenticated request to have 7200 requests/h
@@ -44,7 +44,7 @@ class OpenAire:
         )
 
         if response_token.status_code == 200:
-            OpenAire._openaire_token = response_token.json()["access_token"]
+            OpenAire.openaire_token = response_token.json()["access_token"]
         else:
             raise AbstractImportError("Invalid OpenAire Access Token")
 
@@ -66,10 +66,8 @@ class OpenAire:
         response = requests.get(
             url_link,
             headers={
-                "Authorization": "Bearer " + OpenAire._openaire_token,
-                "User-Agent": "PaNetExtractor/1.0.0 ("
-                + OpenAire._USER_AGENT_MAIL
-                + ")",
+                "Authorization": "Bearer " + OpenAire.openaire_token,
+                "User-Agent": "PaNetExtractor/1.0.0 (" + OpenAire.USER_AGENT_MAIL + ")",
             },
         )
         time_start = time.time()
