@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from src.main import app
+from src.panetextractor.api.main import app
 from unittest.mock import Mock
 import pytest
 import time
@@ -56,7 +56,10 @@ def mock_rate_limit_error(mocker):
     mock_response.headers = {"Retry-After": "2"}
     mock_response.json.return_value = {"error": "Too many requests"}
 
-    mocker.patch("src.openaire.openaireapi.requests.get", return_value=mock_response)
+    mocker.patch(
+        "packages.data_provider.src.data_provider.openaireapi.requests.get",
+        return_value=mock_response,
+    )
 
     return mock_response
 

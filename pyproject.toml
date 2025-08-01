@@ -1,10 +1,15 @@
 [project]
-name = "PaNETExtractor"
+name = "panatech"
 version = "0.1.0"
 requires-python = ">=3.10"
 description = "Extract paNET terms from text"
 readme = "README.md" 
-
+dependencies = [ "fastapi[standard]>=0.115.13",
+    "httpx>=0.28.1",
+    "panet_technique_matcher",
+    "data_provider",
+    "techniques_extractor"
+    ]
 
 [dependency-groups]
 dev = [
@@ -13,16 +18,26 @@ dev = [
     "pytest-mock>=3.14.1",
     "ruff>=0.12.5",
 ]
-app =  [
-    "fastapi[standard]>=0.115.13",
-    "httpx>=0.28.1",
-    "owlready2>=0.48",
-    "python-dotenv>=1.1.1",
-    "rapidfuzz>=3.13.0",
-    "transformers[torch]>=4.52.4",
-    "accelerate>=1.8.1",
+
+
+[tool.uv.sources]
+panet_technique_matcher = {workspace = true}
+techniques_extractor = {workspace = true}
+data_provider = {workspace = true}
+
+[tool.uv.workspace]
+members = [
+    "packages/*",
+    "premier",
 ]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+
+[[tool.uv.index]]
+name = "testpypi" 
+url  = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true

@@ -1,4 +1,4 @@
-from .orchestrator.orchestrator import Orchestrator
+from ..orchestrator.orchestrator import Orchestrator
 from fastapi import FastAPI, Query, Request, Body, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field

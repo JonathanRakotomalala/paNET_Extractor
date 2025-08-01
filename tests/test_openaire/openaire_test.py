@@ -1,4 +1,8 @@
-from src.openaire import OpenAire, AbstractImportError, RateLimitError
+from packages.data_provider.src.data_provider import (
+    OpenAire,
+    AbstractImportError,
+    RateLimitError,
+)
 import pytest
 from unittest.mock import Mock
 
@@ -10,7 +14,10 @@ def mock_rate_limit_error_with_retry_after(mocker):
     mock_response.headers = {"Retry-After": "2"}
     mock_response.json.return_value = {"error": "Too many requests"}
 
-    mocker.patch("src.openaire.openaireapi.requests.get", return_value=mock_response)
+    mocker.patch(
+        "packages.data_provider.src.data_provider.openaireapi.requests.get",
+        return_value=mock_response,
+    )
 
     return mock_response
 
@@ -24,7 +31,10 @@ def mock_rate_limit_error_without_retry_after(mocker):
     mock_response.headers = []
     mock_response.json.return_value = {"error": "Too many requests"}
 
-    mocker.patch("src.openaire.openaireapi.requests.get", return_value=mock_response)
+    mocker.patch(
+        "packages.data_provider.src.data_provider.openaireapi.requests.get",
+        return_value=mock_response,
+    )
 
     return mock_response
 
@@ -80,7 +90,8 @@ def test_get_abstract_doi_no_abstract(mocker):
         "results": [{"mainTitle": "some title", "subTitle": None}],
     }
     mocker.patch(
-        "src.openaire.openaireapi.OpenAire.call_open_aire", return_value=mock_response
+        "packages.data_provider.src.data_provider.openaireapi.OpenAire.call_open_aire",
+        return_value=mock_response,
     )
     OpenAire()
     result = OpenAire.get_abstract_from_doi("12345")
@@ -91,7 +102,10 @@ def test_get_abstract_doi_no_abstract(mocker):
 def test_get_abstract_doi_abstract_import_error(mocker):
     mock_response = mocker.Mock()
     mock_response.status_code = 400
-    mocker.patch("src.openaire.openaireapi.requests.get", return_value=mock_response)
+    mocker.patch(
+        "packages.data_provider.src.data_provider.openaireapi.requests.get",
+        return_value=mock_response,
+    )
     result = OpenAire.get_abstract_from_doi("12345")
 
     assert result == "No abstract available"
@@ -105,6 +119,9 @@ def test_get_abstract_doi_rate_limit_error(mock_rate_limit_error_without_retry_a
 def test_token_error(mocker):
     mock_response = mocker.Mock()
     mock_response.status_code = 404
-    mocker.patch("src.openaire.openaireapi.requests.get", return_value=mock_response)
+    mocker.patch(
+        "packages.data_provider.src.data_provider.openaireapi.requests.get",
+        return_value=mock_response,
+    )
     with pytest.raises(AbstractImportError):
         OpenAire()

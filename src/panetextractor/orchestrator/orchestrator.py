@@ -1,11 +1,13 @@
-from ..llm.llm import Llm
-from ..matchmapper.matchmapper import MatchMapper
-import json
+from src.panetextractor import MatchMapper, Llm, OpenAire
 from fastapi import HTTPException
-from ..ontology.ontology_import import EmptyOntologyError, OntologyNotFoundError
-from ..openaire import OpenAire, RateLimitError
+from packages.panet_technique_matcher.src.panet_technique_matcher.ontology_importer import (
+    EmptyOntologyError,
+    OntologyNotFoundError,
+)
+from packages.data_provider.src.data_provider import RateLimitError
 import time
 import math
+import json
 
 
 class Orchestrator:

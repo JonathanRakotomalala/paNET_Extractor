@@ -1,5 +1,9 @@
-from src.matchmapper.matchmapper import MatchMapper
-from src.ontology.ontology_import import Ontology
+from packages.panet_technique_matcher.src.panet_technique_matcher.matchmapper import (
+    MatchMapper,
+)
+from packages.panet_technique_matcher.src.panet_technique_matcher.ontology_importer import (
+    Ontology,
+)
 import unittest
 
 
@@ -15,7 +19,7 @@ class TestClass(unittest.TestCase):
         cls.my_ontology = None
 
     def test_matcher_found(self):
-        assert MatchMapper.my_matcher("diffraction", self.my_ontology)["ten first"][
+        assert MatchMapper.my_matcher("diffraction", self.my_ontology)["n_first"][
             0
         ] == {
             "technique": {
@@ -31,8 +35,8 @@ class TestClass(unittest.TestCase):
 
     def test_matcher_almost_found(self):
         result = MatchMapper.my_matcher("JISANS", self.my_ontology)
-        assert result["ten first"][1]["score"] == 0.1667
-        assert result["ten first"][0] == {
+        assert result["n_first"][1]["score"] == 0.1667
+        assert result["n_first"][0] == {
             "technique": {
                 "label": "grazing incidence small angle neutron scattering",
                 "altLabel": ["GISANS"],
@@ -48,13 +52,13 @@ class TestClass(unittest.TestCase):
         }
 
     def test_matcher_not_found(self):
-        assert MatchMapper.my_matcher("19", self.my_ontology) == {"ten first": None}
+        assert MatchMapper.my_matcher("19", self.my_ontology) is None
 
     def test_matcher_empty_list(self):
-        assert MatchMapper.my_matcher("EXAFS", []) == {"ten first": None}
+        assert MatchMapper.my_matcher("EXAFS", []) is None
 
     def test_matcher_empty_input(self):
-        assert MatchMapper.my_matcher("", self.my_ontology) == {"ten first": None}
+        assert MatchMapper.my_matcher("", self.my_ontology) is None
 
     # def test_map_to_panet_exception(self):
     #     with self.assertRaises(JSONDecodeError):

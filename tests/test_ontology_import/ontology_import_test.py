@@ -1,4 +1,4 @@
-from src.ontology.ontology_import import (
+from packages.panet_technique_matcher.src.panet_technique_matcher.ontology_importer import (
     Ontology,
     EmptyOntologyError,
     OntologyNotFoundError,

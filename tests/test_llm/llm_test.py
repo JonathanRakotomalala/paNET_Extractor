@@ -1,12 +1,14 @@
-from src.llm.llm import Llm, QUERY_1, QUERY_2
+from packages.techniques_extractor.src.techniques_extractor.llm import (
+    Llm,
+    QUERY_2,
+    QUERY_1,
+)
 import json
 import pytest
 
 
 def test_output_format(mocker):
     llm_instance = Llm()
-    # mock_pipe = mocker.Mock()
-    # mock_pipe.return_value =
     mocker.patch.object(
         llm_instance,
         "pipe",

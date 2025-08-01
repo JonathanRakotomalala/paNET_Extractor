@@ -1,0 +1,26 @@
+[project]
+name = "techniques_extractor"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "JonathanRakotomalala" }
+]
+requires-python = ">=3.10"
+dependencies = [    
+    "transformers[torch]>=4.52.4",
+    "accelerate>=1.8.1",
+    "python-dotenv>=1.1.1",]
+
+[project_scripts]
+techniques_extractor = "techniques_extractor:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[[tool.uv.index]]
+name = "testpypi" 
+url  = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true

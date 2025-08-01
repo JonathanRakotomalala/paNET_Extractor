@@ -1,6 +1,10 @@
 import time
 import os
 import requests
+from dotenv import find_dotenv, load_dotenv
+
+# find the .env then load the environment secrets and variables
+load_dotenv(find_dotenv())
 
 
 class AbstractImportError(Exception):

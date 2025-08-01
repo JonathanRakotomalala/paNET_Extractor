@@ -1,8 +1,10 @@
-from src.orchestrator.orchestrator import Orchestrator
-from src.llm import Llm
-from src.matchmapper import MatchMapper
-from src.ontology import EmptyOntologyError
-from src.openaire import OpenAire, RateLimitError
+from src.panetextractor.orchestrator import Orchestrator
+from packages.techniques_extractor.src.techniques_extractor import Llm
+from packages.panet_technique_matcher.src.panet_technique_matcher import MatchMapper
+from packages.panet_technique_matcher.src.panet_technique_matcher.ontology_importer import (
+    EmptyOntologyError,
+)
+from packages.data_provider.src.data_provider import OpenAire, RateLimitError
 import pytest
 from fastapi import HTTPException
 import time
@@ -10,10 +12,11 @@ import time
 
 def test_orchestrator_search_from_text_success(mocker):
     mocker.patch(
-        "src.llm.Llm.llm_run", return_value='{"techniques": ["small-angle scattering"]}'
+        "packages.techniques_extractor.src.techniques_extractor.Llm.llm_run",
+        return_value='{"techniques": ["small-angle scattering"]}',
     )
     mocker.patch(
-        "src.matchmapper.MatchMapper.map_to_panet",
+        "packages.panet_technique_matcher.src.panet_technique_matcher.matchmapper.MatchMapper.map_to_panet",
         return_value=[
             {
                 "inText": "small-angle scattering",
@@ -43,9 +46,12 @@ def test_orchestrator_search_from_text_success(mocker):
 
 def test_orchestrator_list_search_from_dois_success(mocker):
     Orchestrator.time_start = None
-    mocker.patch("src.openaire.OpenAire.get_abstract_from_doi", return_value="fffff")
     mocker.patch(
-        "src.orchestrator.Orchestrator.search",
+        "packages.data_provider.src.data_provider.OpenAire.get_abstract_from_doi",
+        return_value="fffff",
+    )
+    mocker.patch(
+        "src.panetextractor.orchestrator.Orchestrator.search",
         return_value={
             "algorithm": "Levenshtein's distance",
             "output": [
@@ -83,7 +89,7 @@ def test_orchestrator_list_search_from_dois_success(mocker):
 
 def test_orchestrator_list_search_no_abstract(mocker):
     mocker.patch(
-        "src.openaire.OpenAire.get_abstract_from_doi",
+        "packages.data_provider.src.data_provider.OpenAire.get_abstract_from_doi",
         return_value="No abstract available",
     )
 
@@ -99,10 +105,12 @@ def test_orchestrator_list_search_no_abstract(mocker):
 
 def test_orchestrator_search_EmptyOntologyError(mocker):
     mocker.patch(
-        "src.llm.Llm.llm_run", return_value='"techniques": ["small-angle scattering"]'
+        "packages.techniques_extractor.src.techniques_extractor.Llm.llm_run",
+        return_value='"techniques": ["small-angle scattering"]',
     )
     mocker.patch(
-        "src.matchmapper.MatchMapper.map_to_panet", side_effect=EmptyOntologyError
+        "packages.panet_technique_matcher.src.panet_technique_matcher.matchmapper.MatchMapper.map_to_panet",
+        side_effect=EmptyOntologyError,
     )
 
     with pytest.raises(HTTPException):
@@ -111,7 +119,8 @@ def test_orchestrator_search_EmptyOntologyError(mocker):
 
 def test_orchestrator_search_JSONDecoderError(mocker):
     mocker.patch(
-        "src.llm.Llm.llm_run", return_value='"techniques": ["small-angle scattering"]'
+        "packages.techniques_extractor.src.techniques_extractor.Llm.llm_run",
+        return_value='"techniques": ["small-angle scattering"]',
     )
 
     with pytest.raises(HTTPException):
@@ -120,7 +129,7 @@ def test_orchestrator_search_JSONDecoderError(mocker):
 
 def test_orchestrator_search_ontology_not_found(mocker):
     mocker.patch(
-        "src.ontology.ontology_import.Ontology.getting_ontology",
+        "packages.panet_technique_matcher.src.panet_technique_matcher.ontology_importer.Ontology.getting_ontology",
         side_effect=EmptyOntologyError,
     )
     with pytest.raises(HTTPException):
@@ -129,7 +138,7 @@ def test_orchestrator_search_ontology_not_found(mocker):
 
 def test_orchestrator_list_search_no_techniques_when_search_raises_exceptions(mocker):
     mocker.patch(
-        "src.orchestrator.orchestrator.Orchestrator.search",
+        "src.panetextractor.orchestrator.orchestrator.Orchestrator.search",
         side_effect=HTTPException(
             status_code=400,
             detail="Bad Request",
@@ -143,7 +152,7 @@ def test_orchestrator_list_search_no_techniques_when_search_raises_exceptions(mo
 
 def test_orchestrator_list_search_RateLimitError_raises_http_exception(mocker):
     mocker.patch(
-        "src.openaire.OpenAire.get_abstract_from_doi",
+        "packages.data_provider.src.data_provider.OpenAire.get_abstract_from_doi",
         side_effect=RateLimitError(time.time() + 10),
     )
 
