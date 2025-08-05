@@ -1,7 +1,7 @@
 [project]
 name = "techniques_extractor"
 version = "0.1.0"
-description = "Add your description here"
+description = "Extract techniques from text"
 readme = "README.md"
 authors = [
     { name = "JonathanRakotomalala" }

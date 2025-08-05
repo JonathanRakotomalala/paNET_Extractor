@@ -1,7 +1,7 @@
 [project]
 name = "data_provider"
 version = "0.1.0"
-description = "Add your description here"
+description = "gets datas using Openaire"
 readme = "README.md"
 authors = [
     { name = "JonathanRakotomalala"}

@@ -10,8 +10,8 @@ resolution-markers = [
 [manifest]
 members = [
     "data-provider",
-    "panatech",
     "panet-technique-matcher",
+    "panetextractor",
     "techniques-extractor",
 ]
 
@@ -869,7 +869,22 @@ wheels = [
 ]
 
 [[package]]
-name = "panatech"
+name = "panet-technique-matcher"
+version = "0.1.0"
+source = { editable = "packages/panet_technique_matcher" }
+dependencies = [
+    { name = "owlready2" },
+    { name = "rapidfuzz" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "owlready2", specifier = ">=0.48" },
+    { name = "rapidfuzz", specifier = ">=3.13.0" },
+]
+
+[[package]]
+name = "panetextractor"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
@@ -903,21 +918,6 @@ dev = [
     { name = "pytest-cov", specifier = ">=6.2.1" },
     { name = "pytest-mock", specifier = ">=3.14.1" },
     { name = "ruff", specifier = ">=0.12.5" },
-]
-
-[[package]]
-name = "panet-technique-matcher"
-version = "0.1.0"
-source = { editable = "packages/panet_technique_matcher" }
-dependencies = [
-    { name = "owlready2" },
-    { name = "rapidfuzz" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "owlready2", specifier = ">=0.48" },
-    { name = "rapidfuzz", specifier = ">=3.13.0" },
 ]
 
 [[package]]

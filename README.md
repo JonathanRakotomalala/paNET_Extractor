@@ -26,7 +26,7 @@ Execute `uv sync` to install all dependencies defined in the project. <br>
 1. `panetextractor`: 
     1. `api`: the endpoints and the api ddocs settings
     2. `orchestrator`: orchestrate all the operations for techniques extraction
-2. `service_evaluation`: a script to evaluate the service with a list (length=3) of random DOIs
+2. `service_evaluation`: a script to evaluate the service with a list (length=3) of random DOIs <a href="\tests\data\results.json"> here</a>
 
 
 ## Contributing
