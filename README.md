@@ -13,6 +13,8 @@ Execute `uv sync` to install all dependencies defined in the project. <br>
 - OPEN_AIRE_REFRESH_ACCESS_TOKEN
 - ACCESS_TOKEN
 - USER_AGENT_MAIL
+
+API docs at http://host/doc_elem#/
 ## Project structure
 
 > In the `packages` directory there are 3 packages:

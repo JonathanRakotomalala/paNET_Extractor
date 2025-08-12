@@ -3,7 +3,7 @@
 
 ### Usage
 
-> Requires refresh access token from openaire and a mail passed onto environment variables for openaire requests:
+> Requires refresh access token from openaire (expires after 1 month) and a mail passed onto environment variables for openaire requests:
 OPEN_AIRE_REFRESH_ACCESS_TOKEN and USER_AGENT_MAIL
 
 

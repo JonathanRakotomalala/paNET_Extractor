@@ -4,11 +4,11 @@ FROM python:3.12-slim
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Copy the application into the container.
-COPY . /paNET_Extractor
+COPY . /app
 
 # Install the application dependencies.
-WORKDIR /paNET_Extractor
+WORKDIR /app
 RUN uv sync --frozen --no-cache
 
 # Run the application.
-CMD ["/paNET_Extractor/.venv/bin/fastapi", "run", "panetextractor/api/main.py", "--port", "80", "--host", "0.0.0.0"]
+CMD ["/app/.venv/bin/fastapi", "run", "src/panetextractor/api/main.py", "--port", "80", "--host", "0.0.0.0"]
