@@ -8,7 +8,7 @@ COPY . /app
 
 # Install the application dependencies.
 WORKDIR /app/src/panetextractor/api
-RUN uv sync --frozen --no-cache
+RUN uv sync --no-dev --frozen --no-cache
 
 # Run the application.
 CMD ["/app/.venv/bin/fastapi", "run", "main.py", "--port", "80", "--host", "0.0.0.0"]
