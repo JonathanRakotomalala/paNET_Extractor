@@ -22,9 +22,7 @@ class Orchestrator:
     time_start = None  # The time at which the user can restart to make a requests, None if error 429 has'nt occured yet
     OpenAire()  # initialize openaire
 
-    llm_instance = Llm()
-
-    def search(input: str):
+    def search(input: str, inference="transformers"):
         """
         Search the techniques in the text and map them to those in paNET
 
@@ -37,8 +35,11 @@ class Orchestrator:
         Raises:
             HTPPException: if failed to get the techniques from the text or failed to import ontology
         """
-
-        extracted_techniques = Orchestrator.llm_instance.llm_run(input)
+        llm_instance = Llm(inference)
+        if inference == "vllm":
+            extracted_techniques = llm_instance.llm_run(input, "vllm")
+        else:
+            extracted_techniques = llm_instance.llm_run(input)
         try:
             data = json.loads(extracted_techniques)
             return {

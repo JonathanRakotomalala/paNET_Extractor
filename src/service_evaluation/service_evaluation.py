@@ -4,7 +4,7 @@ import httpx
 import asyncio
 import json
 from fastapi.testclient import TestClient
-from paNET_Extractor.src.panetextractor.api.main import app
+from src.panetextractor.api.main import app
 
 LINK = "https://api.openalex.org/works?filter=authorships.institutions.lineage:i2801997478,publication_year:2025"
 LENGTH = len("https://doi.org/")

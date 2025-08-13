@@ -7,6 +7,7 @@ import os
 from huggingface_hub import login
 from accelerate import Accelerator
 from dotenv import find_dotenv, load_dotenv
+from openai import OpenAI
 
 # find the .env then load the environment secrets and variables
 load_dotenv(find_dotenv())
@@ -81,39 +82,46 @@ class Llm:
     """
 
     _ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")  # TOKEN TO CONNECT TO HUGGINGFACE
+    openai_api_key = os.environ.get("OPENAI_API_KEY")
+    openai_api_base = "http://localhost:8000"
     # login to huggingface
     login(token=_ACCESS_TOKEN)
     pipe = None
+    model_loaded = False
 
-    def __init__(self):
-        # accelerator a huggingface library to optimize the model's execution
-        accelerator = Accelerator()
-        # https://huggingface.co/docs/transformers.js/api/pipelines#pipelinestextgenerationpipeline
-        # temperature : a paramater of the generation, but it can be used in pipeline if the llm model support auto-regressive generation : https://huggingface.co/docs/transformers.js/en/pipelines#natural-language-processing https://huggingface.co/docs/transformers.js/main/en/api/utils/generation#utilsgenerationgenerationconfigtype--code-object-code
-        # top_k : The number of highest probability vocabulary tokens to keep for top-k-filtering
-        # top_p :  Default value i s 1. If set to float < 1, only the smallest set of most probable tokens with probabilities that add up to top_p or higher are kept for generation.
-        # prompt_lookup_num_tokens : The number of tokens to be output as candidate tokens. https://huggingface.co/docs/transformers/main/en/main_classes/text_generation#transformers.GenerationConfig.prompt_lookup_num_tokens
-        # for more information about text generation and the parameters : https://huggingface.co/docs/transformers/main_classes/text_generation
-        self.model = AutoModelForCausalLM.from_pretrained(
-            "meta-llama/Llama-3.2-3B-Instruct",
-            torch_dtype=torch.bfloat16,
-            pad_token_id=0,
-        )
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            "meta-llama/Llama-3.2-3B-Instruct"
-        )
-        self.model, self.tokenizer = accelerator.prepare(self.model, self.tokenizer)
-        # Initialize the text generation pipeline
-        self.pipe = pipeline(
-            "text-generation",
-            model=self.model,
-            tokenizer=self.tokenizer,
-            temperature=0.35,
-            top_p=0.98,
-            top_k=11,
-        )
+    def __init__(self, inference="transformers"):
+        """Initialize the LLM class without loading the model immediately."""
+        if inference == "transformers" or inference != "vllm":
+            print("Loading model and tokenizer...")
+            self.accelerator = Accelerator()
 
-    def llm_run(self, input: str):
+            # Load model and tokenizer
+            self.model = AutoModelForCausalLM.from_pretrained(
+                "meta-llama/Llama-3.2-3B-Instruct",
+                torch_dtype=torch.bfloat16,
+                pad_token_id=0,
+            )
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                "meta-llama/Llama-3.2-3B-Instruct"
+            )
+
+            # Prepare the model and tokenizer using accelerator
+            self.model, self.tokenizer = self.accelerator.prepare(
+                self.model, self.tokenizer
+            )
+
+            # Initialize the text generation pipeline
+            self.pipe = pipeline(
+                "text-generation",
+                model=self.model,
+                tokenizer=self.tokenizer,
+                temperature=0.35,
+                top_p=0.98,
+                top_k=11,
+            )
+            print("Model and tokenizer loaded.")
+
+    def llm_run(self, input: str, mode="transformers"):
         """Downloads or Load the model locally then make an infering
 
         Args:
@@ -121,15 +129,32 @@ class Llm:
         Returns:
            String of a json containing the techniques
         """
+
         messages = [
             {"role": "user", "content": DOCUMENT_METADATA_EXTRACTION + input},
         ]
-        # make the model generate an answer
-        answer = self.pipe(messages)
+        if mode == "vllm":
+            # models = client.models.list()
+            # model = models.data[0].id
+            client = OpenAI(
+                # defaults to os.environ.get("OPENAI_API_KEY")
+                api_key=Llm.openai_api_key,
+                base_url=Llm.openai_api_base,
+            )
 
-        print(answer)
+            # Chat Completion API
+            chat_completion = client.chat.completions.create(
+                messages=messages,
+                model="met-llama/Llama-3.1-8B-Instruct",
+            )
+            response = chat_completion.choices[0].message.content
+        else:
+            # make the model generate an answer
+            answer = self.pipe(messages)
 
-        # get the answer generated
-        response = answer[0]["generated_text"][1]["content"]
+            print(answer)
+
+            # get the answer generated
+            response = answer[0]["generated_text"][1]["content"]
 
         return response
