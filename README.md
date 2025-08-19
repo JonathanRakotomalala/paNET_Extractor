@@ -14,13 +14,10 @@ Execute `uv sync` to install all dependencies defined in the project. <br>
 - ACCESS_TOKEN
 - USER_AGENT_MAIL
 
-API docs at http://host/doc_elem#/
 ## Project structure
 
 > In the `packages` directory there are 3 packages:
-1. `panet-technique-matcher`: calculate the distance between strings with rapidfuzz
-2. `ontology`: import paNET ontology
-
+1. `panet-technique-matcher`: tools for matchmapping of the techniques
 2. `technique-extractor`: string extraction from text
 3. `data-provider`: import abstract from DOIs using OpenAire API
 

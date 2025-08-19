@@ -1,5 +1,6 @@
 # panet-technique-matcher
 ---
+
 ## The panet-technique-matcher consists of 3 modules:
 ontology_importer,matchmapper,score
 
@@ -42,7 +43,9 @@ ontology_importer,matchmapper,score
 
 #### extract_subclass_of
 ```console   
-   > Ontology.extract_subclass_of(a_class)
+   > superclasses = Ontology.extract_subclass_of(a_class)
+   > print(superclasses)
+   {'PaNET01037': 'low momentum transfer scattering'}
 ```
 
 
