@@ -1,6 +1,10 @@
 # panet-technique-matcher
 ---
-
+<p align="center">
+ <a href="https://www.python.org">
+<img src="https://img.shields.io/badge/python->=3.10-blue"> 
+</a>
+</p>
 ## The panet-technique-matcher consists of 3 modules:
 ontology_importer,matchmapper,score
 
@@ -18,46 +22,46 @@ ontology_importer,matchmapper,score
 
 ## Usage
 ```console
-    > import rapidfuzz
-    > from panet_technique_matcher import Score,Ontology,MatchMapper
+> import rapidfuzz
+> from panet_technique_matcher import Score,Ontology,MatchMapper
 ```   
 
 
 #### get_normalized_distance
 ```console   
-   > print(Score.get_normalized_distance("abc","a",rapidfuzz.distance.Levenshtein.normalized_distance))
-    0.6667
+> print(Score.get_normalized_distance("abc","a",rapidfuzz.distance.Levenshtein.normalized_distance))
+   0.6667
 ```
 
 #### get_altalabels_normalized_distance
 ```console
-   > print(Score.get_altlabels_normalized_distances("abc",["abcd","abcde"],rapidfuzz.distance.Levenshtein.normalized_distance))
-    [0.25, 0.4]
+> print(Score.get_altlabels_normalized_distances("abc",["abcd","abcde"],rapidfuzz.distance.Levenshtein.normalized_distance))
+[0.25, 0.4]
 ```
 
 
 #### getting_ontology
 ```console   
-    > Ontology.getting_ontology()
+> Ontology.getting_ontology()
 ```
 
 #### extract_subclass_of
 ```console   
-   > superclasses = Ontology.extract_subclass_of(a_class)
-   > print(superclasses)
-   {'PaNET01037': 'low momentum transfer scattering'}
+> superclasses = Ontology.extract_subclass_of(a_class)
+> print(superclasses)
+{'PaNET01037': 'low momentum transfer scattering'}
 ```
 
 
 #### my_matcher
 ```console   
-   > print(MatchMapper.my_matcher("XAFS",[{"label": "x-ray absorption fine structure", "altLabel": ["XAFS"]},{"label": "pair distribution function", "altLabel": ["PDF"]},]))
+> print(MatchMapper.my_matcher("XAFS",[{"label": "x-ray absorption fine structure", "altLabel": ["XAFS"]},{"label": "pair distribution function", "altLabel": ["PDF"]},]))
 {'ten first': [{'technique': {'label': 'x-ray absorption fine structure', 'altLabel': ['XAFS']}, 'score': 0.0}, {'technique': {'label': 'pair distribution function', 'altLabel': ['PDF']}, 'score': 0.75}]}
 ```
 
 #### map_to_panet
 ```console   
-   > print(MatchMapper.map_to_panet({"techniques":["small angle scattering"]}))
+> print(MatchMapper.map_to_panet({"techniques":["small angle scattering"]}))
 [{'inText': 'small angle scattering', 'inPaNET': {'technique': {'id': 'http://purl.org/pan-science/PaNET/PaNET01124', 'label': 'small angle scattering', 'altLabel': ['SAS', 'small angle diffraction'], 'subClassOf': {'PaNET01037': 'low momentum transfer scattering'}, 'definition1': '', 'definition2': 'https://en.wikipedia.org/wiki/Small-angle_scattering'}, 'score': 0.0}}]
 ```
 

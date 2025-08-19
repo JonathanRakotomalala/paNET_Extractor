@@ -10,9 +10,9 @@ and [pip](https://pip.pypa.io/en/stable/) to install new packages.
 
 Execute `uv sync` to install all dependencies defined in the project. <br>
 3 environment variables are required:
-- OPEN_AIRE_REFRESH_ACCESS_TOKEN
-- ACCESS_TOKEN
-- USER_AGENT_MAIL
+- ACCESS_TOKEN: Huggingface access token
+- OPEN_AIRE_REFRESH_ACCESS_TOKEN: OpenAire refresh access token 
+- USER_AGENT_MAIL: An e-mail
 
 ## Project structure
 
