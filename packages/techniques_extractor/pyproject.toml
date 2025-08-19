@@ -1,6 +1,6 @@
 [project]
 name = "techniques_extractor"
-version = "0.1.0"
+version = "0.1.5"
 description = "Extract techniques from text"
 readme = "README.md"
 authors = [
@@ -10,7 +10,7 @@ requires-python = ">=3.10"
 dependencies = [    
     "transformers[torch]>=4.52.4",
     "accelerate>=1.8.1",
-    "python-dotenv>=1.1.1",]
+]
 
 [project_scripts]
 techniques_extractor = "techniques_extractor:main"

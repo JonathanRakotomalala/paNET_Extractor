@@ -243,12 +243,6 @@ toml = [
 name = "data-provider"
 version = "0.1.0"
 source = { editable = "packages/data_provider" }
-dependencies = [
-    { name = "python-dotenv" },
-]
-
-[package.metadata]
-requires-dist = [{ name = "python-dotenv", specifier = ">=1.1.1" }]
 
 [[package]]
 name = "dnspython"
@@ -898,6 +892,7 @@ dependencies = [
     { name = "fastapi", extra = ["standard"] },
     { name = "httpx" },
     { name = "panet-technique-matcher" },
+    { name = "python-dotenv" },
     { name = "techniques-extractor" },
 ]
 
@@ -915,6 +910,7 @@ requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.13" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "panet-technique-matcher", editable = "packages/panet_technique_matcher" },
+    { name = "python-dotenv", specifier = ">=1.1.1" },
     { name = "techniques-extractor", editable = "packages/techniques_extractor" },
 ]
 
@@ -1574,18 +1570,16 @@ wheels = [
 
 [[package]]
 name = "techniques-extractor"
-version = "0.1.0"
+version = "0.1.5"
 source = { editable = "packages/techniques_extractor" }
 dependencies = [
     { name = "accelerate" },
-    { name = "python-dotenv" },
     { name = "transformers", extra = ["torch"] },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "accelerate", specifier = ">=1.8.1" },
-    { name = "python-dotenv", specifier = ">=1.1.1" },
     { name = "transformers", extras = ["torch"], specifier = ">=4.52.4" },
 ]
 
