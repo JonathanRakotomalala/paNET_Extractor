@@ -86,6 +86,9 @@ class Llm:
     pipe = None
 
     def __init__(self):
+        pass
+
+    def load():
         # accelerator a huggingface library to optimize the model's execution
         accelerator = Accelerator()
         # https://huggingface.co/docs/transformers.js/api/pipelines#pipelinestextgenerationpipeline
@@ -94,20 +97,18 @@ class Llm:
         # top_p :  Default value i s 1. If set to float < 1, only the smallest set of most probable tokens with probabilities that add up to top_p or higher are kept for generation.
         # prompt_lookup_num_tokens : The number of tokens to be output as candidate tokens. https://huggingface.co/docs/transformers/main/en/main_classes/text_generation#transformers.GenerationConfig.prompt_lookup_num_tokens
         # for more information about text generation and the parameters : https://huggingface.co/docs/transformers/main_classes/text_generation
-        self.model = AutoModelForCausalLM.from_pretrained(
+        model = AutoModelForCausalLM.from_pretrained(
             "meta-llama/Llama-3.2-3B-Instruct",
             torch_dtype=torch.bfloat16,
             pad_token_id=0,
         )
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            "meta-llama/Llama-3.2-3B-Instruct"
-        )
-        self.model, self.tokenizer = accelerator.prepare(self.model, self.tokenizer)
+        tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-3B-Instruct")
+        model, tokenizer = accelerator.prepare(model, tokenizer)
         # Initialize the text generation pipeline
-        self.pipe = pipeline(
+        Llm.pipe = pipeline(
             "text-generation",
-            model=self.model,
-            tokenizer=self.tokenizer,
+            model=model,
+            tokenizer=tokenizer,
             temperature=0.35,
             top_p=0.98,
             top_k=11,

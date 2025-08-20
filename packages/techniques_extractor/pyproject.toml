@@ -7,7 +7,7 @@ authors = [
     { name = "JonathanRakotomalala" }
 ]
 requires-python = ">=3.10"
-dependencies = [    
+dependencies = [
     "transformers[torch]>=4.52.4",
     "accelerate>=1.8.1",
 ]

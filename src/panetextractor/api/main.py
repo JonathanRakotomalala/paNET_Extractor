@@ -6,6 +6,8 @@ from typing_extensions import Annotated
 from fastapi.responses import HTMLResponse
 from fastapi.openapi.utils import get_openapi
 from typing import List
+from contextlib import asynccontextmanager
+from packages.techniques_extractor.src.techniques_extractor.llm import Llm
 
 
 class TechniqueDetails(BaseModel):
@@ -80,7 +82,13 @@ class DoiTechResponses(BaseModel):
     outputs: list[DoiTechResponse]
 
 
-app = FastAPI(docs_url=None, redoc_url=None)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    Llm.load()
+    yield
+
+
+app = FastAPI(docs_url=None, redoc_url=None, lifespan=lifespan)
 
 
 @app.get("/doc_elem", include_in_schema=False)
@@ -116,7 +124,7 @@ async def api_documentation(request: Request):
     },
     response_class=JSONResponse,
 )
-def get_techniques(
+async def get_techniques(
     request: Request,
     input: Annotated[
         str,
@@ -145,7 +153,7 @@ def get_techniques(
     },
     response_class=JSONResponse,
 )
-def get_techniques_from_dois(
+async def get_techniques_from_dois(
     request: Request,
     dois: Annotated[
         Dois,

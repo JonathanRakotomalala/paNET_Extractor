@@ -894,6 +894,7 @@ dependencies = [
     { name = "panet-technique-matcher" },
     { name = "python-dotenv" },
     { name = "techniques-extractor" },
+    { name = "transformers", extra = ["torch"] },
 ]
 
 [package.dev-dependencies]
@@ -912,6 +913,7 @@ requires-dist = [
     { name = "panet-technique-matcher", editable = "packages/panet_technique_matcher" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
     { name = "techniques-extractor", editable = "packages/techniques_extractor" },
+    { name = "transformers", extras = ["torch"], specifier = ">=4.52.4" },
 ]
 
 [package.metadata.requires-dev]

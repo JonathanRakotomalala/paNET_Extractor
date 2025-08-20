@@ -48,7 +48,7 @@ def test_invalid_accept_header_2():
 
 
 @pytest.fixture
-def mock_rate_limit_error(mocker):
+def mock_rate_limit_error_openaire(mocker):
     """Fixture to mock an error 429 response"""
 
     mock_response = Mock()
@@ -57,14 +57,14 @@ def mock_rate_limit_error(mocker):
     mock_response.json.return_value = {"error": "Too many requests"}
 
     mocker.patch(
-        "packages.data_provider.src.data_provider.openaireapi.requests.get",
+        "packages.data_provider.src.data_provider.data_provider.requests.get",
         return_value=mock_response,
     )
 
     return mock_response
 
 
-def test_rate_time_limit(mock_rate_limit_error):
+def test_rate_time_limit_openaire(mock_rate_limit_error_openaire):
     with TestClient(app) as client:
         response = client.post(
             url="http://127.0.0.1:8000/dois_to_techniques/",
@@ -74,7 +74,7 @@ def test_rate_time_limit(mock_rate_limit_error):
         assert response.status_code == 429
 
 
-def test_rate_time_limit_and_retried_before_given_time(mock_rate_limit_error):
+def test_rate_time_limit_and_retried_before_given_time(mock_rate_limit_error_openaire):
     with TestClient(app) as client:
         response = client.post(
             url="http://127.0.0.1:8000/dois_to_techniques/",

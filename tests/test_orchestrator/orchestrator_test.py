@@ -4,7 +4,7 @@ from packages.panet_technique_matcher.src.panet_technique_matcher import MatchMa
 from packages.panet_technique_matcher.src.panet_technique_matcher.ontology_importer import (
     EmptyOntologyError,
 )
-from packages.data_provider.src.data_provider import OpenAire, RateLimitError
+from packages.data_provider.src.data_provider import DataProvider, RateLimitError
 import pytest
 from fastapi import HTTPException
 import time
@@ -47,7 +47,7 @@ def test_orchestrator_search_from_text_success(mocker):
 def test_orchestrator_list_search_from_dois_success(mocker):
     Orchestrator.time_start = None
     mocker.patch(
-        "packages.data_provider.src.data_provider.OpenAire.get_abstract_from_doi",
+        "packages.data_provider.src.data_provider.DataProvider.get_abstract_from_doi",
         return_value="fffff",
     )
     mocker.patch(
@@ -67,7 +67,7 @@ def test_orchestrator_list_search_from_dois_success(mocker):
     result = Orchestrator.list_search([("dois", ["12345"])])
 
     Orchestrator.search.assert_called_with("fffff")
-    OpenAire.get_abstract_from_doi.assert_called_with("12345")
+    DataProvider.get_abstract_from_doi.assert_called_with("12345")
 
     assert result == {
         "algorithm": "Levenshtein's distance",
@@ -89,7 +89,7 @@ def test_orchestrator_list_search_from_dois_success(mocker):
 
 def test_orchestrator_list_search_no_abstract(mocker):
     mocker.patch(
-        "packages.data_provider.src.data_provider.OpenAire.get_abstract_from_doi",
+        "packages.data_provider.src.data_provider.DataProvider.get_abstract_from_doi",
         return_value="No abstract available",
     )
 
@@ -152,7 +152,7 @@ def test_orchestrator_list_search_no_techniques_when_search_raises_exceptions(mo
 
 def test_orchestrator_list_search_RateLimitError_raises_http_exception(mocker):
     mocker.patch(
-        "packages.data_provider.src.data_provider.OpenAire.get_abstract_from_doi",
+        "packages.data_provider.src.data_provider.DataProvider.get_abstract_from_doi",
         side_effect=RateLimitError(time.time() + 10),
     )
 

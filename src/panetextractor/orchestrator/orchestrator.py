@@ -1,4 +1,4 @@
-from src.panetextractor import MatchMapper, Llm, OpenAire
+from src.panetextractor import MatchMapper, Llm, DataProvider
 from fastapi import HTTPException
 from packages.panet_technique_matcher.src.panet_technique_matcher.ontology_importer import (
     EmptyOntologyError,
@@ -20,7 +20,7 @@ class Orchestrator:
     """
 
     time_start = None  # The time at which the user can restart to make a requests, None if error 429 has'nt occured yet
-    OpenAire()  # initialize openaire
+    DataProvider()  # initialize openaire
 
     llm_instance = Llm()
 
@@ -82,7 +82,7 @@ class Orchestrator:
                 my_list = []
                 for _, i in doi_list:
                     for j in i:
-                        result = OpenAire.get_abstract_from_doi(j)
+                        result = DataProvider.get_abstract_from_doi(j)
                         # first_result = OpenAire.get_abstract_from_doi(j)
                         # result = re.sub(r'<.*?>', ' ',first_result )
                         if result == "No abstract available":
