@@ -147,7 +147,10 @@ def test_orchestrator_list_search_no_techniques_when_search_raises_exceptions(mo
     )
     result = Orchestrator.list_search([("doi", ["12345"])])
 
-    assert result["outputs"][0]["techniques"] == []
+    assert (
+        result["outputs"][0]["techniques"]
+        == "Error could not extract and map techniques"
+    )
 
 
 def test_orchestrator_list_search_RateLimitError_raises_http_exception(mocker):

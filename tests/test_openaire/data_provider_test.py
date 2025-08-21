@@ -8,10 +8,12 @@ from unittest.mock import Mock
 
 
 @pytest.fixture
-def mock_rate_limit_error_with_retry_after(mocker):
+def mock_rate_limit_error_without_retry_after(mocker):
+    """Fixture to mock an error 429 response"""
+
     mock_response = Mock()
     mock_response.status_code = 429
-    mock_response.headers = {"Retry-After": "2"}
+    mock_response.headers = []
     mock_response.json.return_value = {"error": "Too many requests"}
 
     mocker.patch(
@@ -23,12 +25,10 @@ def mock_rate_limit_error_with_retry_after(mocker):
 
 
 @pytest.fixture
-def mock_rate_limit_error_without_retry_after(mocker):
-    """Fixture to mock an error 429 response"""
-
+def mock_rate_limit_error_with_retry_after(mocker):
     mock_response = Mock()
     mock_response.status_code = 429
-    mock_response.headers = []
+    mock_response.headers = {"Retry-After": "2"}
     mock_response.json.return_value = {"error": "Too many requests"}
 
     mocker.patch(
@@ -83,6 +83,54 @@ def test_get_abstract_doi_success():
     )
 
 
+def test_get_registry_agency_success(mocker):
+    doi = "12345"
+    mock_response = mocker.Mock()
+    mock_response.json.return_value = [{"doi": "12345", "RA": "testCrossref"}]
+    mock_response.status_code = 200
+    mocker.patch(
+        "packages.data_provider.src.data_provider.data_provider.requests.get",
+        return_value=mock_response,
+    )
+    response = DataProvider.get_registry_agency(doi)
+    assert response == "testCrossref"
+
+
+def test_get_registry_agency_error(mocker):
+    doi = "12345"
+    mock_response = mocker.Mock()
+    mock_response.json.return_value = [{"doi": "12345", "status": "Invalid DOI"}]
+    mock_response.status_code = 200
+    mocker.patch(
+        "packages.data_provider.src.data_provider.data_provider.requests.get",
+        return_value=mock_response,
+    )
+    with pytest.raises(AbstractImportError):
+        DataProvider.get_registry_agency(doi)
+
+
+def test_call_datacite_success(mocker):
+    doi = "12345"
+    mock_response = mocker.Mock()
+    mock_response.json.return_value = {
+        "data": [
+            {
+                "id": doi,
+                "type": "dois",
+                "attributes": {"descriptions": [{"description": "test"}]},
+            }
+        ],
+        "meta": {},
+    }
+    mock_response.status_code = 200
+    mocker.patch(
+        "packages.data_provider.src.data_provider.data_provider.requests.get",
+        return_value=mock_response,
+    )
+    response = DataProvider.call_datacite(doi)
+    assert response["data"][0]["id"] == doi
+
+
 def test_get_abstract_doi_no_abstract(mocker):
     mock_response = mocker.Mock()
     mock_response.json.return_value = {
@@ -119,7 +167,46 @@ def test_get_abstract_doi_abstract_import_error(mocker):
     assert result == "Error: No abstract available"
 
 
-def test_get_abstract_doi_rate_limit_error(mock_rate_limit_error_without_retry_after):
+@pytest.fixture
+def mock_rate_limit_error_openaire_test_without_retry_after(mocker):
+    def mock_datacite(url):
+        mock_response = mocker.Mock()
+        mock_response.json.return_value = {
+            "data": [{"attributes": {"descriptions": [{"description": "Test"}]}}]
+        }
+        mock_response.status_code = 200
+        return mock_response
+
+    def mock_openaire(url, headers=None):
+        mock_response = mocker.Mock()
+        mock_response.status_code = 429
+        mock_response.headers = {}
+        mock_response.json.return_value = {"error": "Too many requests"}
+        return mock_response
+
+    def mock_doiRA(url):
+        mock_response = mocker.Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = [{"doi": "12345", "RA": "Crossref"}]
+        return mock_response
+
+    def side_effect(url, headers=None):
+        if "openaire" in url:
+            return mock_openaire(url, headers)
+        elif "datacite" in url:
+            return mock_datacite(url)
+        elif "doi.org" in url:
+            return mock_doiRA(url)
+
+    mocker.patch(
+        "packages.data_provider.src.data_provider.data_provider.requests.get",
+        side_effect=side_effect,
+    )
+
+
+def test_get_abstract_doi_rate_limit_error(
+    mock_rate_limit_error_openaire_test_without_retry_after,
+):
     with pytest.raises(RateLimitError):
         DataProvider.get_abstract_from_doi("12345")
 
@@ -133,3 +220,60 @@ def test_token_error(mocker):
     )
     with pytest.raises(AbstractImportError):
         DataProvider()
+
+
+def test_call_datacite_error(mocker):
+    doi = "12345"
+    mock_response = mocker.Mock()
+    mock_response.json.return_value = {"title": ""}
+    mock_response.status_code = 400
+    mocker.patch(
+        "packages.data_provider.src.data_provider.data_provider.requests.get",
+        return_value=mock_response,
+    )
+    with pytest.raises(AbstractImportError):
+        DataProvider.call_datacite(doi)
+
+
+def test_get_abstract_from_doi_datacite_success(mocker):
+    doi = "12345"
+
+    def mock_datacite(url):
+        mock_response = mocker.Mock()
+        mock_response.json.return_value = {
+            "data": [
+                {
+                    "attributes": {
+                        "descriptions": [
+                            {"description": "Test_get_abstract_datacite_success"}
+                        ]
+                    }
+                }
+            ]
+        }
+        mock_response.status_code = 200
+        return mock_response
+
+    def mock_doiRA(url):
+        mock_response = mocker.Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = [{"doi": "12345", "RA": "DataCite"}]
+        return mock_response
+
+    def side_effect(url, headers=None):
+        if "datacite" in url:
+            return mock_datacite(url)
+        elif "doi.org" in url:
+            return mock_doiRA(url)
+
+    mocker.patch(
+        "packages.data_provider.src.data_provider.data_provider.requests.get",
+        side_effect=side_effect,
+    )
+
+    response = DataProvider.get_abstract_from_doi(doi)
+    assert response == "Test_get_abstract_datacite_success"
+
+
+def test_get_abstract_from_doi_datacite_error():
+    pass

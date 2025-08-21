@@ -49,19 +49,39 @@ def test_invalid_accept_header_2():
 
 @pytest.fixture
 def mock_rate_limit_error_openaire(mocker):
-    """Fixture to mock an error 429 response"""
+    def mock_datacite(url):
+        mock_response = mocker.Mock()
+        mock_response.json.return_value = {
+            "data": [{"attributes": {"descriptions": [{"description": "Test"}]}}]
+        }
+        mock_response.status_code = 200
+        return mock_response
 
-    mock_response = Mock()
-    mock_response.status_code = 429
-    mock_response.headers = {"Retry-After": "2"}
-    mock_response.json.return_value = {"error": "Too many requests"}
+    def mock_openaire(url, headers=None):
+        mock_response = mocker.Mock()
+        mock_response.status_code = 429
+        mock_response.headers = {"Retry-After": "5"}
+        mock_response.json.return_value = {"error": "Too many requests"}
+        return mock_response
+
+    def mock_doiRA(url):
+        mock_response = mocker.Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = [{"doi": "12345", "RA": "Crossref"}]
+        return mock_response
+
+    def side_effect(url, headers=None):
+        if "openaire" in url:
+            return mock_openaire(url, headers)
+        elif "datacite" in url:
+            return mock_datacite(url)
+        elif "doi.org" in url:
+            return mock_doiRA(url)
 
     mocker.patch(
         "packages.data_provider.src.data_provider.data_provider.requests.get",
-        return_value=mock_response,
+        side_effect=side_effect,
     )
-
-    return mock_response
 
 
 def test_rate_time_limit_openaire(mock_rate_limit_error_openaire):
@@ -88,4 +108,4 @@ def test_rate_time_limit_and_retried_before_given_time(mock_rate_limit_error_ope
             headers={"Content-type": "application/json", "Accept": "application/json"},
         )
         assert response.status_code == 429
-        assert response.headers.get("Retry-After") == str(1)
+        assert response.headers.get("Retry-After") == str(3)

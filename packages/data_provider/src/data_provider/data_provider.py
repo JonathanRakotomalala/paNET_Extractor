@@ -55,7 +55,7 @@ class DataProvider:
     def get_registry_agency(doi: str):
         url_link = "https://doi.org/doiRA/" + doi
         response = requests.get(url_link)
-        if response.status_code == 200 and "status" not in response.json()[0]:
+        if response.status_code == 200 and "RA" in response.json()[0]:
             return response.json()[0]["RA"]
         else:
             raise AbstractImportError("Error with the doiRA API")
@@ -137,7 +137,7 @@ class DataProvider:
                 ):
                     abstract = results[0]["descriptions"][0]
             elif registry == "DataCite":
-                response = DataProvider.call_datacite(doi).json()
+                response = DataProvider.call_datacite(doi)
 
                 datas = response.get("data", [])
                 if (
