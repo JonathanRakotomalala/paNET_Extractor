@@ -2,6 +2,9 @@ import time
 import os
 import requests
 from dotenv import find_dotenv, load_dotenv
+import logging
+
+logger = logging.getLogger(__name__)
 
 # find the .env then load the environment secrets and variables
 load_dotenv(find_dotenv())
@@ -9,6 +12,15 @@ load_dotenv(find_dotenv())
 
 class AbstractImportError(Exception):
     def __init__(self, message="OpenAire Error"):
+        self.message = message
+        super().__init__(self.message)
+
+    def __str__(self):
+        return f"{self.message}"
+
+
+class NoPublicationFoundError(Exception):
+    def __init__(self, message="publication not found"):
         self.message = message
         super().__init__(self.message)
 
@@ -28,7 +40,7 @@ class RateLimitError(Exception):
 
 class DataProvider:
     """
-    Manages the authentication and interactions with OpenAire search products API
+    Manages the authentication and interactions with OpenAire search products and Datacite API
 
     Attributes:
         openaire_token : A str used for authenticating API requests.
@@ -63,10 +75,11 @@ class DataProvider:
         """
         url_link = "https://doi.org/doiRA/" + doi.replace(",", "%2C")
         response = requests.get(url_link)
-        if response.status_code == 200 and "RA" in response.json()[0]:
-            return response.json()[0]["RA"]
-        else:
-            raise AbstractImportError("Error with the which RA service")
+        if response.status_code != 200:
+            raise AbstractImportError(f"Http Error response {response.status_code}")
+        if "RA" not in response.json()[0]:
+            raise AbstractImportError(f"Error : {response.json()[0]['status']}")
+        return response.json()[0]["RA"]
 
     def call_datacite(doi):
         """
@@ -77,10 +90,15 @@ class DataProvider:
         """
         url_link = "https://datacite.org/dois?query=doi:" + doi
         response = requests.get(url_link)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            raise AbstractImportError("Error with the DataCite API")
+        match response.status_code:
+            case 200:
+                if len(response.json()["data"]) > 0:
+                    return response.json()
+                raise NoPublicationFoundError("DataCite did not find the publication")
+            case _:
+                raise AbstractImportError(
+                    f"Error DataCite: Http Error response {response.status_code}"
+                )
 
     def call_open_aire(doi):
         """
@@ -100,28 +118,32 @@ class DataProvider:
         response = requests.get(
             url_link,
             headers={
-                "Authorization": "Bearer " + DataProvider.openaire_token,
-                "User-Agent": "PaNetExtractor/1.0.0 ("
-                + DataProvider.USER_AGENT_MAIL
-                + ")",
+                "Authorization": f"Bearer {DataProvider.openaire_token}",
+                "User-Agent": f"PaNetExtractor/1.0.0 ({DataProvider.USER_AGENT_MAIL})",
             },
         )
-        time_start = time.time()
 
-        if response.status_code == 200 and response.json()["header"]["numFound"] > 0:
-            return response
-        elif response.status_code == 429:
-            if "Retry-After" not in response.headers:
-                # waiting time  = difference of the time of the request and the time of the request rounded to the upper hour
-                waiting_time = (time_start + 3600) - time_start
-            else:
-                waiting_time = int(response.headers["Retry-After"])
-            raise RateLimitError(waiting_time, "Too many requests")
-        else:
-            print(response.status_code)
-            raise AbstractImportError("Unable to extract abstract from DOI")
+        logger.debug(response.json())
+        match response.status_code:
+            case 200:
+                if response.json()["header"]["numFound"] > 0:
+                    return response
+                else:
+                    raise NoPublicationFoundError("OpenAire did not find publication")
+            case 429:
+                if "Retry-After" not in response.headers:
+                    # waiting time  = difference of the time of the request and the time of the request rounded to the upper hour
+                    waiting_time = 3600
+                else:
+                    waiting_time = int(response.headers["Retry-After"])
+                raise RateLimitError(waiting_time, "Too many requests")
+            case _:
+                print(response.status_code)
+                raise AbstractImportError(
+                    f"Unable to extract abstract from DOI due to openaire: Http error {response.status_code}"
+                )
 
-    def get_abstract_from_doi(doi):
+    def get_abstract_from_doi(doi: str):
         """
         gets the abstract with openaire's api
 
@@ -137,33 +159,34 @@ class DataProvider:
 
         """
         try:
-            abstract = "No abstract available"
             registry = DataProvider.get_registry_agency(doi)
-            print(registry)
-            if registry == "Crossref":
-                response = DataProvider.call_open_aire(doi)
-                json_response = response.json()
-                results = json_response.get("results", [])
-                if (
-                    results
-                    and "descriptions" in results[0]
-                    and results[0]["descriptions"]
-                ):
-                    abstract = results[0]["descriptions"][0]
-            elif registry == "DataCite":
-                response = DataProvider.call_datacite(doi)
+            logger.info(registry)
+            match registry:
+                case "Crossref":
+                    response = DataProvider.call_open_aire(doi)
+                    json_response = response.json()
+                    results = json_response.get("results", [])
+                    if (
+                        results
+                        and "descriptions" in results[0]
+                        and results[0]["descriptions"]
+                    ):
+                        return results[0]["descriptions"][0]
+                case "DataCite":
+                    response = DataProvider.call_datacite(doi)
 
-                datas = response.get("data", [])
-                if (
-                    datas
-                    and "descriptions" in datas[0]["attributes"]
-                    and datas[0]["attributes"]["descriptions"]
-                ):
-                    abstract = datas[0]["attributes"]["descriptions"][0]["description"]
+                    datas = response.get("data", [])
+                    if (
+                        datas
+                        and "descriptions" in datas[0]["attributes"]
+                        and datas[0]["attributes"]["descriptions"]
+                    ):
+                        return datas[0]["attributes"]["descriptions"][0]["description"]
         except (AbstractImportError, RateLimitError) as e:
             if isinstance(e, AbstractImportError):
-                abstract = "Error: Could not get the abstract"
+                logger.error(e)
+                return f"Error: Could not get the abstract due to {e}"
             else:
                 raise RateLimitError(e.retry, "Too many requests")
 
-        return abstract
+        return "No abstract available"

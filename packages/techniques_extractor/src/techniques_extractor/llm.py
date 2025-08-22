@@ -7,6 +7,9 @@ import os
 from huggingface_hub import login
 from accelerate import Accelerator
 from dotenv import find_dotenv, load_dotenv
+import logging
+
+logger = logging.getLogger(__name__)
 
 # find the .env then load the environment secrets and variables
 load_dotenv(find_dotenv())
@@ -128,7 +131,7 @@ class Llm:
         # make the model generate an answer
         answer = self.pipe(messages)
 
-        print(answer)
+        logger.info(answer)
 
         # get the answer generated
         response = answer[0]["generated_text"][1]["content"]

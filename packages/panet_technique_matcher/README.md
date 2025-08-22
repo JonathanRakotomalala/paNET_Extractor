@@ -44,7 +44,7 @@ ontology_importer,matchmapper,score
 
 #### getting_ontology
 ```console   
-> Ontology.getting_ontology()
+> ontology = sOntology.getting_ontology()
 ```
 
 #### extract_subclass_of

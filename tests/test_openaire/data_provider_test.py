@@ -2,6 +2,7 @@ from packages.data_provider.src.data_provider import (
     DataProvider,
     AbstractImportError,
     RateLimitError,
+    NoPublicationFoundError,
 )
 import pytest
 from unittest.mock import Mock
@@ -49,10 +50,22 @@ def test_found_from_doi():
     )
 
 
-def test_nothing_found_from_doi():
-    with pytest.raises(AbstractImportError):
+def test_nothing_found_from_doi_openaire():
+    with pytest.raises(NoPublicationFoundError):
         DataProvider()
         DataProvider.call_open_aire("10.4466/123s132111")
+
+
+def test_nothing_found_from_doi_datacite(mocker):
+    mock_response = mocker.Mock()
+    mock_response.json.return_value = {"data": [], "meta": {"total": 0}}
+    mock_response.status_code = 200
+    mocker.patch(
+        "packages.data_provider.src.data_provider.data_provider.requests.get",
+        return_value=mock_response,
+    )
+    with pytest.raises(NoPublicationFoundError):
+        DataProvider.call_datacite("10.4466/123s132111")
 
 
 def test_input_a_void_doi_get_all_products():
@@ -164,7 +177,7 @@ def test_get_abstract_doi_abstract_import_error(mocker):
     )
     result = DataProvider.get_abstract_from_doi("12345")
 
-    assert result == "Error: Could not get the abstract"
+    assert result == "Error: Could not get the abstract due to Http Error response 400"
 
 
 @pytest.fixture
@@ -285,7 +298,10 @@ def test_get_abstract_from_doi_datacite_error(mocker):
 
     mocker.patch(
         "packages.data_provider.src.data_provider.DataProvider.call_datacite",
-        side_effect=AbstractImportError,
+        side_effect=AbstractImportError("Error DataCite: Http Error response 410"),
     )
     response = DataProvider.get_abstract_from_doi(doi)
-    assert response == "Error: Could not get the abstract"
+    assert (
+        response
+        == "Error: Could not get the abstract due to Error DataCite: Http Error response 410"
+    )
