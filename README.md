@@ -17,15 +17,15 @@ Execute `uv sync` to install all dependencies defined in the project. <br>
 ## Project structure
 
 > In the `packages` directory there are 3 packages:
-1. `panet-technique-matcher`: tools for matchmapping of the techniques
-2. `technique-extractor`: string extraction from text
-3. `data-provider`: import abstract from DOIs using OpenAire API
+1. <a href="packages\panet_technique_matcher\README.md">`panet-technique-matcher`</a>>: tools for matchmapping of the techniques
+2.  <a href="packages\techniques_extractor\README.md">`techniques-extractor`</a>: technique extraction from text
+3.  <a href="packages\data_provider\README.md">`data-provider`</a>: import abstract from DOIs using OpenAire API
 
 > In the `src`:
 1. `panetextractor`: 
     1. `api`: the endpoints and the api ddocs settings
     2. `orchestrator`: orchestrate all the operations for techniques extraction
-2. `service_evaluation`: a script to evaluate the service with a list (length=3) of random DOIs <a href="\tests\data\results.json"> here</a>
+2. `service_evaluation`: a script to evaluate the service with a list (length=3) of random DOIs. Results<a href="\tests\data\results.json"> here</a>
 
 
 ## Contributing

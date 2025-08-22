@@ -164,7 +164,7 @@ def test_get_abstract_doi_abstract_import_error(mocker):
     )
     result = DataProvider.get_abstract_from_doi("12345")
 
-    assert result == "Error: No abstract available"
+    assert result == "Error: Could not get the abstract"
 
 
 @pytest.fixture
@@ -275,5 +275,17 @@ def test_get_abstract_from_doi_datacite_success(mocker):
     assert response == "Test_get_abstract_datacite_success"
 
 
-def test_get_abstract_from_doi_datacite_error():
-    pass
+def test_get_abstract_from_doi_datacite_error(mocker):
+    doi = "12345"
+
+    mocker.patch(
+        "packages.data_provider.src.data_provider.data_provider.DataProvider.get_registry_agency",
+        return_value="DataCite",
+    )
+
+    mocker.patch(
+        "packages.data_provider.src.data_provider.DataProvider.call_datacite",
+        side_effect=AbstractImportError,
+    )
+    response = DataProvider.get_abstract_from_doi(doi)
+    assert response == "Error: Could not get the abstract"

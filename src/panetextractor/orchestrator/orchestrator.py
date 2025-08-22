@@ -15,11 +15,11 @@ class Orchestrator:
     Orchestrates the operations for techniques extraction
 
     Attributes:
-        time_start: A float that represent the time at which the user cans start requests, default to None
+        time_start_openaire: A float that represent the time at which the user cans start requests, default to None
         llm_instance: Instance of the Llm class
     """
 
-    time_start = None  # The time at which the user can restart to make a requests, None if error 429 has'nt occured yet
+    time_start_openaire = None  # The time at which the user can restart to make a requests, None if error 429 has'nt occured yet
     DataProvider()  # initialize openaire
 
     llm_instance = Llm()
@@ -73,11 +73,11 @@ class Orchestrator:
             HTTPException: If failed to get the abstract or reached request rate limit
         """
         try:
-            # if time_start is past we can call openaire and do the operations
+            # if time_start_openaire is past we can call openaire and do the operations
 
             if (
-                Orchestrator.time_start is None
-                or Orchestrator.time_start <= time.time()
+                Orchestrator.time_start_openaire is None
+                or Orchestrator.time_start_openaire <= time.time()
             ):
                 my_list = []
                 for _, i in doi_list:
@@ -103,11 +103,11 @@ class Orchestrator:
             # else we calculate the remaining time until we can make a request and we raise an exception
             else:
                 raise RateLimitError(
-                    str(math.ceil(Orchestrator.time_start - time.time()))
+                    str(math.ceil(Orchestrator.time_start_openaire - time.time()))
                 )
         except RateLimitError as e:
-            # # 429 error we set time_start to the actual time plus the retry-after
-            Orchestrator.time_start = time.time() + float(e.retry)
+            # # 429 error we set time_start_openaire to the actual time plus the retry-after
+            Orchestrator.time_start_openaire = time.time() + float(e.retry)
             raise HTTPException(
                 status_code=429,
                 detail={"error": e.message},

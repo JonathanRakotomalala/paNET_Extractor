@@ -16,7 +16,7 @@ class MatchMapper:
         Args :
             input: a string
             terms: a list of terms
-
+            n: number of matches (default to 10)
         Returns :
             the term that have the highest proximity or None
 
@@ -91,7 +91,8 @@ class MatchMapper:
         """
         Map the techniques to the paNET ontology
         Args :
-            my_json a json
+            my_json: a json
+            n:number of matches to show (default 1)
         Returns :
             a list of the technics in the json and it nearest terms in paNET
         """

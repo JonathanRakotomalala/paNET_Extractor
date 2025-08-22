@@ -61,7 +61,7 @@ class Ontology:
                 raise OntologyNotFoundError("Error cannot find path")
             else:
                 raise EmptyOntologyError(
-                    "Error while trying to load ontology:ontology not found"
+                    "Error while trying to load ontology: ontology not found"
                 )
 
     def extract_subclass_of(a_class):

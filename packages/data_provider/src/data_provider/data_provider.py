@@ -53,20 +53,34 @@ class DataProvider:
             raise AbstractImportError("Invalid OpenAire Access Token")
 
     def get_registry_agency(doi: str):
-        url_link = "https://doi.org/doiRA/" + doi
+        """The registry agency of the publication
+        Args:
+            doi
+        Returns:
+            The registry agency
+        Raises :
+            AbstractImportError
+        """
+        url_link = "https://doi.org/doiRA/" + doi.replace(",", "%2C")
         response = requests.get(url_link)
         if response.status_code == 200 and "RA" in response.json()[0]:
             return response.json()[0]["RA"]
         else:
-            raise AbstractImportError("Error with the doiRA API")
+            raise AbstractImportError("Error with the which RA service")
 
     def call_datacite(doi):
+        """
+        get informations from the doi
+        Args: doi
+        Returns:
+        Raises: AbstractImportError
+        """
         url_link = "https://datacite.org/dois?query=doi:" + doi
         response = requests.get(url_link)
         if response.status_code == 200:
             return response.json()
         else:
-            raise AbstractImportError("Error with the Datacite API")
+            raise AbstractImportError("Error with the DataCite API")
 
     def call_open_aire(doi):
         """
@@ -74,7 +88,7 @@ class DataProvider:
 
         Args:
             doi: a string that represent a DOI
-        Return:
+        Returns:
             a Response
 
         Raises:
@@ -148,7 +162,7 @@ class DataProvider:
                     abstract = datas[0]["attributes"]["descriptions"][0]["description"]
         except (AbstractImportError, RateLimitError) as e:
             if isinstance(e, AbstractImportError):
-                abstract = "Error: No abstract available"
+                abstract = "Error: Could not get the abstract"
             else:
                 raise RateLimitError(e.retry, "Too many requests")
 

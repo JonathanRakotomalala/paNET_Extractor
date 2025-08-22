@@ -29,13 +29,15 @@ ontology_importer,matchmapper,score
 
 #### get_normalized_distance
 ```console   
-> print(Score.get_normalized_distance("abc","a",rapidfuzz.distance.Levenshtein.normalized_distance))
+> score = Score.get_normalized_distance("abc","a",rapidfuzz.distance.Levenshtein.normalized_distance)
+> print(score)
    0.6667
 ```
 
 #### get_altalabels_normalized_distance
 ```console
-> print(Score.get_altlabels_normalized_distances("abc",["abcd","abcde"],rapidfuzz.distance.Levenshtein.normalized_distance))
+> scores = Score.get_altlabels_normalized_distances("abc",["abcd","abcde"],rapidfuzz.distance.Levenshtein.normalized_distance)
+> print(scores)
 [0.25, 0.4]
 ```
 
@@ -55,13 +57,15 @@ ontology_importer,matchmapper,score
 
 #### my_matcher
 ```console   
-> print(MatchMapper.my_matcher("XAFS",[{"label": "x-ray absorption fine structure", "altLabel": ["XAFS"]},{"label": "pair distribution function", "altLabel": ["PDF"]},]))
-{'ten first': [{'technique': {'label': 'x-ray absorption fine structure', 'altLabel': ['XAFS']}, 'score': 0.0}, {'technique': {'label': 'pair distribution function', 'altLabel': ['PDF']}, 'score': 0.75}]}
+> matches = MatchMapper.my_matcher("XAFS",[{"label": "x-ray absorption fine structure", "altLabel": ["XAFS"]},{"label": "pair distribution function", "altLabel": ["PDF"]},])
+> print(matches)
+{'n first': [{'technique': {'label': 'x-ray absorption fine structure', 'altLabel': ['XAFS']}, 'score': 0.0}, {'technique': {'label': 'pair distribution function', 'altLabel': ['PDF']}, 'score': 0.75}]}
 ```
 
 #### map_to_panet
 ```console   
-> print(MatchMapper.map_to_panet({"techniques":["small angle scattering"]}))
+> matches = MatchMapper.map_to_panet({"techniques":["small angle scattering"]})
+> print(matches)
 [{'inText': 'small angle scattering', 'inPaNET': {'technique': {'id': 'http://purl.org/pan-science/PaNET/PaNET01124', 'label': 'small angle scattering', 'altLabel': ['SAS', 'small angle diffraction'], 'subClassOf': {'PaNET01037': 'low momentum transfer scattering'}, 'definition1': '', 'definition2': 'https://en.wikipedia.org/wiki/Small-angle_scattering'}, 'score': 0.0}}]
 ```
 

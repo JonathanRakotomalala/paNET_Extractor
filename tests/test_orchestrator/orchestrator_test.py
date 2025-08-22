@@ -3,6 +3,7 @@ from packages.techniques_extractor.src.techniques_extractor import Llm
 from packages.panet_technique_matcher.src.panet_technique_matcher import MatchMapper
 from packages.panet_technique_matcher.src.panet_technique_matcher.ontology_importer import (
     EmptyOntologyError,
+    OntologyNotFoundError,
 )
 from packages.data_provider.src.data_provider import DataProvider, RateLimitError
 import pytest
@@ -169,3 +170,35 @@ def test_orchestrator_list_search_RateLimitError_raises_ratelimit_then_http_exce
     Orchestrator.time_start = time.time() + 60
     with pytest.raises(HTTPException):
         Orchestrator.list_search([("doi", ["12345"])])
+
+
+def test_orchestrator_search_error_404_empty_ontology(mocker):
+    mocker.patch(
+        "packages.techniques_extractor.src.techniques_extractor.Llm.llm_run",
+        return_value='{"techniques":["xfas"]}',
+    )
+
+    mocker.patch(
+        "packages.panet_technique_matcher.src.panet_technique_matcher.MatchMapper.map_to_panet",
+        side_effect=EmptyOntologyError,
+    )
+    with pytest.raises(HTTPException):
+        Orchestrator.search(
+            "This is a test to check if error 404 is raised when the ontology is empty"
+        )
+
+
+def test_orchestrator_search_error_404_ontology_not_found(mocker):
+    mocker.patch(
+        "packages.techniques_extractor.src.techniques_extractor.Llm.llm_run",
+        return_value='{"techniques":["xfas"]}',
+    )
+
+    mocker.patch(
+        "packages.panet_technique_matcher.src.panet_technique_matcher.MatchMapper.map_to_panet",
+        side_effect=OntologyNotFoundError,
+    )
+    with pytest.raises(HTTPException):
+        Orchestrator.search(
+            "This is a test to check if error 404 is raised when the ontology is not found"
+        )
