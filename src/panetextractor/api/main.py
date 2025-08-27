@@ -78,7 +78,7 @@ class DoiTechResponse(BaseModel):
 
 
 class DoiTechResponses(BaseModel):
-    algorithm: str = Field(examples=["Levenshtein's distance"])
+    algorithm: str = Field(examples=["Levenshtein distance"])
     outputs: list[DoiTechResponse]
 
 

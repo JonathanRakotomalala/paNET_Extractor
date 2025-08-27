@@ -36,37 +36,37 @@ Given a scientific text and your knowledge of synchrotron experimental technique
       "techniques": [list of technique acronyms and/or full technique names, or an empty list if no techniques are explicitly mentioned]
     }}
 
-    Requirements:
+Requirements:
 
-        Techniques:
+    Techniques:
 
-            ONLY include techniques explicitly mentioned in the text.
+        ONLY include techniques explicitly mentioned in the text.
 
-            Use the exact name and casing (capitalization) as it appears(written) in the text (e.g., SAXS, XANES).
+        Use the exact name and casing (capitalization) as it appears(written) in the text (e.g., SAXS, XANES).
 
-            If no techniques are mentioned, return an empty list [].
+        If no techniques are mentioned, return an empty list [].
 
-            Do not infer techniques from experimental results or sample characterization mentions.
+        Do not infer techniques from experimental results or sample characterization mentions.
 
-            Do not combine multiple techniques (e.g., "operando absorption and X-ray diffraction tomography" → ["operando absorption", "X-ray diffraction tomography"]).
+        Do not combine multiple techniques (e.g., "operando absorption and X-ray diffraction tomography" → ["operando absorption", "X-ray diffraction tomography"]).
 
-            Do not include techniques that might be commonly used in the field but are not explicitly stated in the text.
-            
-            Do not include techniques such as SAXS, XANES, operando absorption and X-ray diffraction tomography or any other that is **not** mentioned in the provided text. Only include those that appear in the text verbatim.
+        Do not include techniques that might be commonly used in the field but are not explicitly stated in the text.
+        
+        Do not include techniques such as SAXS, XANES, operando absorption and X-ray diffraction tomography or any other that is **not** mentioned in the provided text. Only include those that appear in the text verbatim.
 
-        Output content:
+    Output content:
 
-            Only include explicitly stated techniques.
+        Only include explicitly stated techniques.
 
-            Each technique should be listed once (no duplicates).
+        Each technique should be listed once (no duplicates).
 
-            Only provide the RAW JSON object (no extra text).
+        Only provide the RAW JSON object (no extra text).
 
-            Each technique must be directly quotable from the provided source text.
+        Each technique must be directly quotable from the provided source text.
 
-    Note: If no techniques are explicitly mentioned in the text, return an empty list [].
+Note: If no techniques are explicitly mentioned in the text, return an empty list [].
     
-   Text to analyze:
+Text to analyze:
    """)
 
 QUERY_1 = "In this contribution small-angle scattering from layered systems is  considered. When a colloidal dispersion is stirred it usually decomposes  into layers. There are two important questions concerning these layers:  What is the structure in a layer? What is the stacking structure  between such layers? For concentrated colloidal dispersions both these  questions can be investigated by small-angle scattering experiments. It  will become apparent that the answer is also important for technical  applications. Both a theoretical description as well as an experimental  verification are given in the paper"
@@ -83,7 +83,9 @@ class Llm:
         pipe: Pipeline to make llm inference, default to None
     """
 
-    _ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")  # TOKEN TO CONNECT TO HUGGINGFACE
+    _ACCESS_TOKEN = os.environ.get(
+        "HUGGING_FACE_ACCESS_TOKEN"
+    )  # TOKEN TO CONNECT TO HUGGINGFACE
     # login to huggingface
     login(token=_ACCESS_TOKEN)
     pipe = None
@@ -92,6 +94,7 @@ class Llm:
         pass
 
     def load():
+        """Downloads the model locally"""
         # accelerator a huggingface library to optimize the model's execution
         accelerator = Accelerator()
         # https://huggingface.co/docs/transformers.js/api/pipelines#pipelinestextgenerationpipeline
@@ -118,7 +121,7 @@ class Llm:
         )
 
     def llm_run(self, input: str):
-        """Downloads or Load the model locally then make an infering
+        """Makes inference to the llm
 
         Args:
            input a string, the user's text
@@ -132,7 +135,6 @@ class Llm:
         answer = self.pipe(messages)
 
         logger.info(answer)
-
         # get the answer generated
         response = answer[0]["generated_text"][1]["content"]
 

@@ -12,7 +12,7 @@ class TestClass(unittest.TestCase):
 
     @classmethod
     def setup_class(cls):
-        cls.my_ontology = Ontology.getting_ontology()
+        cls.my_ontology = Ontology.fetch_ontology()
 
     @classmethod
     def teardown_class(cls):

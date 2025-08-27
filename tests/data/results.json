@@ -1,99 +1,60 @@
 {
-    "algorithm": "Levenshtein's distance",
+    "algorithm": "Levenshtein distance",
     "outputs": [
         {
-            "doi": "10.1021/acsearthspacechem.5c00048",
-            "abstract": "<jats:p>Fluorapatite (FAp, nominally Ca10(PO4)6F2) has been identified as an important host-material for rare earth elements and yttrium (REY) in marine sediments. REY can be accommodated in either the larger 6+3 coordinated Ca1 site or the smaller 6+1 coordinated Ca2 site, yet little is known about the site preference of REY through the lanthanide series despite its importance for understanding REY enrichment processes in FAp. Theoretical investigations based on density functional theory (DFT) predict that all REY intrinsically prefer the smaller and more ionic Ca2 site. The Ca2 site preference is less pronounced when the excess of positive charge resulting from the REY3+ for Ca2+ substitution is compensated by a coupled Na+ for Ca2+ substitution, instead of the energetically more favorable Si4+ for P5+ coupled substitution. The site preference varies quadratically with the ionic radius of REY and linearly with the sum of their first and second ionization energies. The quadratic shape of the site preference is similar to the shape of Onuma diagrams, which suggests that the local effective elastic constant of the site controls the site preference, rather than the nominal size of the site. Despite being smaller, the Ca2 site has a lower effective elastic constant, and is, therefore, more flexible than the Ca1 site for accommodating larger and smaller trivalent REY cations. Concentration-dependent computations show that REY clustering is thermodynamically favorable, except for Yb and Lu.</jats:p>",
+            "doi": "10.1002/eem2.70074",
+            "abstract": "<jats:p>Silica (SiO<jats:sub>2</jats:sub>) anodes are promising candidates for enhancing the energy density of next\u2010generation Li\u2010ion batteries, offering a compelling combination of high storage capacity, stable cycling performance, low cost, and sustainability. This performance stems from SiO<jats:sub>2</jats:sub> unique lithiation mechanism, which involves its conversion to electroactive silicon (Si) and electrochemically inactive species. However, widespread adoption of SiO<jats:sub>2</jats:sub> anodes is hindered by their slow initial lithiation. To address this, research has focused on developing electrochemical \u201cactivation protocols\u201d that involve prolonged low\u2010potential holding steps to promote SiO<jats:sub>2</jats:sub> conversion. Despite these efforts, the complex and multi\u2010pathway nature of SiO<jats:sub>2</jats:sub> lithiation process remains poorly understood, impeding the rational design of effective activation strategies. By introducing a multi\u2010probe characterization approach, this study reveals that, contrary to the previously proposed reaction mechanism of SiO<jats:sub>2</jats:sub> anodes, the lithiation process initiates at low potentials with the direct formation of Li<jats:sub>4</jats:sub>SiO<jats:sub>4</jats:sub> and Li<jats:sub>x</jats:sub>Si. Electrochemical activation potential was found to significantly influence the degree of conversion, with 10\u2009mV identified as the optimal cut\u2010off potential for maximizing SiO<jats:sub>2</jats:sub> utilization. These findings provide key enablers to unlock the full potential of SiO<jats:sub>2</jats:sub> anodes for battery technology.</jats:p>",
             "techniques": []
         },
         {
-            "doi": "10.1038/s41467-025-60152-2",
-            "abstract": "<jats:title>Abstract</jats:title><jats:p>Baculoviruses are large DNA viruses found in nature propagating amongst insects and lepidoptera in particular. Their viral cycle has been studied and characterized over decades and they are nowadays considered as invaluable biotechnology tools widely used as biopesticides, recombinant expression systems or delivery vehicle for gene therapy. However, very little is known about the baculovirus nucleocapsid assembly at a molecular level. Here, we solved the whole structure of the nucleocapsid of<jats:italic>Autographa californica</jats:italic>multiple nucleopolyhedrovirus (AcMNPV) by applying cryo-electron microscopy (CryoEM) combined to<jats:italic>de novo</jats:italic>modelling and Alphafold2 predictions. Our structure completes prior observations from the helical sheath and the basal structure and elucidate the intricate architecture of the apical cap, unravelling for the first time the organization of a baculoviral DNA portal featuring intriguing symmetry mismatches between its core and vertex. The core, closing the capsid at the apex, holds two antiparallel DNA helices of the covalently closed circular (ccc) DNA genome tethered to Ac54 proteins. Different symmetry components at the apical cap and basal structure are constituted of the same building block, made of Ac101/Ac144, proving the versatility of this modular pair. The crown forming the portal vertex displays a C21 symmetry and contains, amongst others, the motor-like protein Ac66. Our findings support the viral portal to be involved in DNA packaging, most probably in conjunction with other parts of a larger DNA packaging apparatus that are not bound to mature virions and await further elucidation.</jats:p>",
+            "doi": "10.21203/rs.3.rs-5965086/v1",
+            "abstract": "<title>Abstract</title>         <p>Colors in biominerals mainly arise from the presence of small organic pigments occluded during biomineralization processes, however the physicochemical origin of hues has been overlooked. Here, inspired by sea urchins, colored calcite crystals with biomimetic nanostructure were synthesized using the natural red pigment naphthazarin (NZ) during the formation of amorphous calcium carbonate (ACC), the biological precursor described in vivo. A halochromic ACC crystallization pathway is revealed, where the speciation of NZ is driven by pH variations during crystallization and subsequently stabilized within the calcium carbonate-hybrid pigments, showing lavender-blue to violet-blue hues upon crystallization. Deprotonated NZ not only leads to the various shades of blue, but also controls polymorph selection, with minimal impact on ACC formation. The resulting bio-inspired hybrid pigments exhibit enhanced color stability regarding temperature and pH as evidenced by textile finishing assays for the latter. Overall, this study brings insights into the processes behind the coloration of biomineralized organisms and explores the development of bio-inspired hybrid pigments for coloring applications.</p>",
             "techniques": [
                 {
-                    "inText": "CryoEM",
+                    "inText": "naphthazarin (NZ)",
                     "inPaNET": {
                         "technique": {
-                            "id": "http://purl.org/pan-science/PaNET/PaNET01145",
-                            "label": "electron microscopy",
-                            "altLabel": [
-                                "EM"
-                            ],
-                            "subClassOf": {
-                                "PaNET01047": "electron emission technique",
-                                "PaNET01069": "microscopy"
-                            },
-                            "definition1": "",
-                            "definition2": "https://en.wikipedia.org/wiki/Electron_microscope"
-                        },
-                        "score": 0.6667
-                    }
-                },
-                {
-                    "inText": "de novo modelling",
-                    "inPaNET": {
-                        "technique": {
-                            "id": "http://purl.org/pan-science/PaNET/PaNET01134",
-                            "label": "wide angle scattering",
+                            "id": "http://purl.org/pan-science/PaNET/PaNET01258",
+                            "label": "x-ray photoelectron emission",
                             "altLabel": [],
                             "subClassOf": {
-                                "PaNET01036": "high momentum transfer scattering"
+                                "PaNET01012": "x-ray probe",
+                                "PaNET01269": "photoelectron emission"
                             },
                             "definition1": "",
                             "definition2": ""
                         },
-                        "score": 0.619
-                    }
-                },
-                {
-                    "inText": "Alphafold2",
-                    "inPaNET": {
-                        "technique": {
-                            "id": "http://purl.org/pan-science/PaNET/PaNET01002",
-                            "label": "ultrafast probe",
-                            "altLabel": [
-                                "femtosecond probe"
-                            ],
-                            "subClassOf": {
-                                "PaNET00105": "pulsed probe"
-                            },
-                            "definition1": "",
-                            "definition2": ""
-                        },
-                        "score": 0.8
+                        "score": 0.75
                     }
                 }
             ]
         },
         {
-            "doi": "10.1038/s41467-024-54949-w",
-            "abstract": "Infections caused by Staphylococcus aureus depend on its ability to acquire nutrients. One essential nutrient is iron, which is obtained from the heme of the human host hemoglobin (Hb) through a protein machinery called Iron-regulated surface determinant (Isd)\u00a0system. IsdB is the protein in charge of heme extraction from Hb, which is the first step of the chain of events leading to iron transfer to the bacterium cell interior. In order to elucidate the molecular events leading from the formation of the initial IsdB:Hb complex to heme extraction, we use time-resolved X-ray solution scattering (TR-XSS) in combination with rapid mixing triggering. We succeed in defining the stoichiometry of IsdB:Hb binding and in describing the kinetics of the subsequent structural changes. The presented approach is potentially applicable to unveil the complex kinetic pathways generated by protein-protein interaction in different biological systems.",
+            "doi": "10.1038/s42004-025-01450-0",
+            "abstract": "<jats:title>Abstract</jats:title>           <jats:p>The behavior of iron carbonates at high pressures is relevant for geological processes occurring in Earth interiors. Here, cubic iron <jats:italic>sp</jats:italic>             <jats:sup>3</jats:sup>-carbonate Fe<jats:sub>2</jats:sub>[C<jats:sub>4</jats:sub>O<jats:sub>10</jats:sub>] was synthesized in diamond anvil cell by reacting Fe<jats:sub>2</jats:sub>O<jats:sub>3</jats:sub> and CO<jats:sub>2</jats:sub> at 65(4) GPa and 3000(\u00b1500) K, simulating the environment of localized thermal anomalies in the mantle. The crystal structure, determined by in situ single-crystal X-ray diffraction, features pyramidal [C<jats:sub>4</jats:sub>O<jats:sub>10</jats:sub>]<jats:sup>4-</jats:sup> anions. The experimental crystal structure corresponds to a structural model from density functional theory calculations. Experimentally determined values for zero-pressure volume <jats:italic>V</jats:italic>             <jats:sub>0</jats:sub> and bulk modulus <jats:italic>K</jats:italic>             <jats:sub>0</jats:sub> are: <jats:italic>V</jats:italic>             <jats:sub>0</jats:sub>\u2009=\u20091059(17) \u00c5<jats:sup>3</jats:sup>, <jats:italic>K</jats:italic>             <jats:sub>0</jats:sub>\u2009=\u2009160(18) GPa, The DFT-calculated Raman spectrum, modeled with zinc substituting iron, matches the experimental one, supporting the structural model\u2019s accuracy. Fe<jats:sub>2</jats:sub>[C<jats:sub>4</jats:sub>O<jats:sub>10</jats:sub>] remained stable upon decompression down to 25\u2009GPa, below which it amorphized. DFT calculations also reveal a spin crossover of Fe<jats:sup>2+</jats:sup> cations at 95\u2009GPa, which is significantly higher than in other Fe<jats:sup>2+</jats:sup>-containing carbonates.</jats:p>",
             "techniques": [
                 {
-                    "inText": "TR-XSS",
+                    "inText": "X-ray diffraction",
                     "inPaNET": {
                         "technique": {
-                            "id": "http://purl.org/pan-science/PaNET/PaNET01297",
-                            "label": "high resolution x-ray photoelectron spectroscopy",
+                            "id": "http://purl.org/pan-science/PaNET/PaNET01216",
+                            "label": "x-ray diffraction",
                             "altLabel": [
-                                "HR-XPS"
+                                "XRD"
                             ],
                             "subClassOf": {
-                                "PaNET01104": "high resolution photoelectron spectroscopy",
-                                "PaNET01204": "x-ray photoelectron spectroscopy"
+                                "CHMO_0000182": "",
+                                "PaNET01012": "x-ray probe",
+                                "PaNET01022": "diffraction",
+                                "Q133900": ""
                             },
                             "definition1": "",
                             "definition2": ""
                         },
-                        "score": 0.3333
+                        "score": 0.0588
                     }
                 }
             ]
-        },
-        {
-            "doi": "10.1021/acs.jpcc.5c02197",
-            "abstract": "No abstract available",
-            "techniques": []
         }
     ]
 }

@@ -243,6 +243,12 @@ toml = [
 name = "data-provider"
 version = "0.1.0"
 source = { editable = "packages/data_provider" }
+dependencies = [
+    { name = "requests" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "requests", specifier = ">=2.32.4" }]
 
 [[package]]
 name = "dnspython"

@@ -1,6 +1,9 @@
 import owlready2
 from owlready2 import base
 from .superclass_extractor import extract_subclass_of
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class EmptyOntologyError(Exception):
@@ -22,7 +25,7 @@ class OntologyNotFoundError(Exception):
 
 
 class Ontology:
-    def getting_ontology():
+    def fetch_ontology():
         """import the ontology from local or from internet return error if invalid link or path
 
         Returns:
@@ -56,6 +59,7 @@ class Ontology:
             else:
                 raise EmptyOntologyError()
         except (FileNotFoundError, base.OwlReadyOntologyParsingError) as e:
+            logger.error(e)
             if isinstance(e, FileNotFoundError):
                 raise OntologyNotFoundError(f"Error cannot find path : {url}")
             else:

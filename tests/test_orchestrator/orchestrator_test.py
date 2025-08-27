@@ -34,7 +34,7 @@ def test_orchestrator_search_from_text_success(mocker):
     )
 
     assert result == {
-        "algorithm": "Levenshtein's distance",
+        "algorithm": "Levenshtein distance",
         "output": [
             {
                 "inPaNET": {"technique": {"small-angle scattering"}},
@@ -54,7 +54,7 @@ def test_orchestrator_list_search_from_dois_success(mocker):
     mocker.patch(
         "src.panetextractor.orchestrator.Orchestrator.search",
         return_value={
-            "algorithm": "Levenshtein's distance",
+            "algorithm": "Levenshtein distance",
             "output": [
                 {
                     "inPaNET": {"technique": {"small-angle scattering"}},
@@ -71,7 +71,7 @@ def test_orchestrator_list_search_from_dois_success(mocker):
     DataProvider.get_abstract_from_doi.assert_called_with("12345")
 
     assert result == {
-        "algorithm": "Levenshtein's distance",
+        "algorithm": "Levenshtein distance",
         "outputs": [
             {
                 "doi": "12345",
@@ -97,7 +97,7 @@ def test_orchestrator_list_search_no_abstract(mocker):
     result = Orchestrator.list_search([("doi", ["12345"])])
 
     assert result == {
-        "algorithm": "Levenshtein's distance",
+        "algorithm": "Levenshtein distance",
         "outputs": [
             {"doi": "12345", "abstract": "No abstract available", "techniques": []}
         ],
@@ -130,7 +130,7 @@ def test_orchestrator_search_JSONDecoderError(mocker):
 
 def test_orchestrator_search_ontology_not_found(mocker):
     mocker.patch(
-        "packages.panet_technique_matcher.src.panet_technique_matcher.ontology_importer.Ontology.getting_ontology",
+        "packages.panet_technique_matcher.src.panet_technique_matcher.ontology_importer.Ontology.fetch_ontology",
         side_effect=EmptyOntologyError,
     )
     with pytest.raises(HTTPException):
@@ -202,3 +202,21 @@ def test_orchestrator_search_error_404_ontology_not_found(mocker):
         Orchestrator.search(
             "This is a test to check if error 404 is raised when the ontology is not found"
         )
+
+
+def test_rate_limit_error_datacite(mocker):
+    mocker.patch(
+        "packages.data_provider.src.data_provider.DataProvider.call_datacite",
+        side_effect=RateLimitError(2),
+    )
+    with pytest.raises(RateLimitError):
+        DataProvider.call_datacite("12345")
+
+
+def test_rate_limit_error_which_ra(mocker):
+    mocker.patch(
+        "packages.data_provider.src.data_provider.DataProvider.get_registry_agency",
+        side_effect=RateLimitError(2),
+    )
+    with pytest.raises(RateLimitError):
+        DataProvider.get_registry_agency("12345")

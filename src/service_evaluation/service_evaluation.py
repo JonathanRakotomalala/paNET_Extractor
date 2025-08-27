@@ -48,7 +48,7 @@ class ServiceEvaluation:
             print(my_doi_list)
 
             # pick 3 random dois
-            sample_dois = random.sample(my_doi_list, min(4, len(my_doi_list)))
+            sample_dois = random.sample(my_doi_list, min(3, len(my_doi_list)))
             print(f"3 selected : {sample_dois}")
             # retrieve the token for openaire authentication
             # OpenAire()

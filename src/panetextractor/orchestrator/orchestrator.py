@@ -4,10 +4,16 @@ from packages.panet_technique_matcher.src.panet_technique_matcher.ontology_impor
     EmptyOntologyError,
     OntologyNotFoundError,
 )
-from packages.data_provider.src.data_provider import RateLimitError
+from packages.data_provider.src.data_provider import (
+    RateLimitError,
+    NoPublicationFoundError,
+)
 import time
 import math
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Orchestrator:
@@ -15,16 +21,17 @@ class Orchestrator:
     Orchestrates the operations for techniques extraction
 
     Attributes:
-        time_start_openaire: A float that represent the time at which the user cans start requests, default to None
+        time_start: A float that represent the time at which the user cans start requests, default to None
         llm_instance: Instance of the Llm class
     """
 
-    time_start_openaire = None  # The time at which the user can restart to make a requests, None if error 429 has'nt occured yet
+    time_start = None  # The time at which the user can restart to make a requests, None if error 429 has'nt occured yet
+
     DataProvider()  # initialize openaire
 
     llm_instance = Llm()
 
-    def search(input: str):
+    def search(input: str, algorithm="Levenshtein distance"):
         """
         Search the techniques in the text and map them to those in paNET
 
@@ -42,10 +49,11 @@ class Orchestrator:
         try:
             data = json.loads(extracted_techniques)
             return {
-                "algorithm": "Levenshtein's distance",
+                "algorithm": algorithm,
                 "output": MatchMapper.map_to_panet(data),
             }
         except (json.JSONDecodeError, EmptyOntologyError, OntologyNotFoundError) as e:
+            logger.error(e)
             if isinstance(e, EmptyOntologyError) or isinstance(
                 e, OntologyNotFoundError
             ):
@@ -59,7 +67,7 @@ class Orchestrator:
                     headers={"message": "Bad Request"},
                 )
 
-    def list_search(doi_list):
+    def list_search(doi_list, algorithm="Levenshtein distance"):
         """
         Gets the doi's abstract and search teh techniques
 
@@ -73,11 +81,10 @@ class Orchestrator:
             HTTPException: If failed to get the abstract or reached request rate limit
         """
         try:
-            # if time_start_openaire is past we can call openaire and do the operations
+            # if time_start is past we can call openaire and do the operations
 
-            if (
-                Orchestrator.time_start_openaire is None
-                or Orchestrator.time_start_openaire <= time.time()
+            if (Orchestrator.time_start is None) or (
+                Orchestrator.time_start <= time.time()
             ):
                 my_list = []
                 for _, i in doi_list:
@@ -94,20 +101,29 @@ class Orchestrator:
                                 techniques = (
                                     "Error could not extract and map techniques"
                                 )
+                            except NoPublicationFoundError as e:
+                                logger.error(e)
 
                         my_list.append(
                             {"doi": j, "abstract": result, "techniques": techniques}
                         )
 
-                return {"algorithm": "Levenshtein's distance", "outputs": my_list}
+                return {"algorithm": algorithm, "outputs": my_list}
             # else we calculate the remaining time until we can make a request and we raise an exception
             else:
                 raise RateLimitError(
-                    str(math.ceil(Orchestrator.time_start_openaire - time.time()))
+                    str(math.ceil(Orchestrator.time_start - time.time()))
                 )
         except RateLimitError as e:
-            # # 429 error we set time_start_openaire to the actual time plus the retry-after
-            Orchestrator.time_start_openaire = time.time() + float(e.retry)
+            # 429 error we set time_start to the actual time plus the retry-after.
+            #  as we have multiple methods that raises 429 we only change time_start value when the time at which we can restart to make http requests is superior to the actual time_start
+            logger.error(e)
+            if (
+                Orchestrator.time_start is None
+                or Orchestrator.time_start < time.time() + float(e.retry)
+            ):
+                Orchestrator.time_start = time.time() + float(e.retry)
+
             raise HTTPException(
                 status_code=429,
                 detail={"error": e.message},

@@ -1,4 +1,3 @@
-import time
 import os
 import requests
 from dotenv import find_dotenv, load_dotenv
@@ -35,7 +34,7 @@ class RateLimitError(Exception):
         super().__init__(self.message)
 
     def __str__(self):
-        return f"{self.message + self.retry}"
+        return f"{self.message + str(self.retry)}"
 
 
 class DataProvider:
@@ -64,37 +63,55 @@ class DataProvider:
         else:
             raise AbstractImportError("Invalid OpenAire Access Token")
 
-    def get_registry_agency(doi: str):
+    def get_registry_agency(doi):
         """The registry agency of the publication
         Args:
-            doi
+            The doi as a string
         Returns:
             The registry agency
         Raises :
             AbstractImportError
         """
         url_link = "https://doi.org/doiRA/" + doi.replace(",", "%2C")
-        response = requests.get(url_link)
+        response = requests.get(
+            url_link,
+            headers={
+                "User-Agent": f"PaNetExtractor/1.0.0 ({DataProvider.USER_AGENT_MAIL})",
+            },
+        )
+        logger.debug(response.json())
         if response.status_code != 200:
             raise AbstractImportError(f"Http Error response {response.status_code}")
         if "RA" not in response.json()[0]:
             raise AbstractImportError(f"Error : {response.json()[0]['status']}")
+        if response.status_code == 429:
+            raise RateLimitError(3600, "which RA ?: Too many requests")
         return response.json()[0]["RA"]
 
     def call_datacite(doi):
         """
-        get informations from the doi
-        Args: doi
+        extract informations from the doi
+        Args:
+            doi: a string that represent the digital object identifier
         Returns:
+            The json response containing all informations
         Raises: AbstractImportError
         """
         url_link = "https://datacite.org/dois?query=doi:" + doi
-        response = requests.get(url_link)
+        response = requests.get(
+            url_link,
+            headers={
+                "User-Agent": f"PaNetExtractor/1.0.0 ({DataProvider.USER_AGENT_MAIL})",
+            },
+        )
+        logger.debug(response.json())
         match response.status_code:
             case 200:
                 if len(response.json()["data"]) > 0:
                     return response.json()
                 raise NoPublicationFoundError("DataCite did not find the publication")
+            case 429:
+                raise RateLimitError(3600, "DataCite: Too many requests")
             case _:
                 raise AbstractImportError(
                     f"Error DataCite: Http Error response {response.status_code}"
@@ -105,7 +122,7 @@ class DataProvider:
         calls OpenAire search products API to get informations from the doi
 
         Args:
-            doi: a string that represent a DOI
+            doi: a string that represent the digital object identifier
         Returns:
             a Response
 
@@ -132,18 +149,18 @@ class DataProvider:
                     raise NoPublicationFoundError("OpenAire did not find publication")
             case 429:
                 if "Retry-After" not in response.headers:
-                    # waiting time  = difference of the time of the request and the time of the request rounded to the upper hour
+                    # waiting time  = one hour
                     waiting_time = 3600
                 else:
                     waiting_time = int(response.headers["Retry-After"])
-                raise RateLimitError(waiting_time, "Too many requests")
+                raise RateLimitError(waiting_time, "OpenAire: Too many requests")
             case _:
                 print(response.status_code)
                 raise AbstractImportError(
                     f"Unable to extract abstract from DOI due to openaire: Http error {response.status_code}"
                 )
 
-    def get_abstract_from_doi(doi: str):
+    def get_abstract_from_doi(doi):
         """
         gets the abstract with openaire's api
 
@@ -161,6 +178,7 @@ class DataProvider:
         try:
             registry = DataProvider.get_registry_agency(doi)
             logger.info(registry)
+            print(registry)
             match registry:
                 case "Crossref":
                     response = DataProvider.call_open_aire(doi)

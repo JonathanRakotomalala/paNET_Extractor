@@ -41,6 +41,6 @@ jobs:
       env:
         USER_AGENT_MAIL: ${{ env.USER_AGENT_MAIL}}
         OPEN_AIRE_REFRESH_ACCESS_TOKEN: ${{ secrets.OPEN_AIRE_REFRESH_ACCESS_TOKEN}}
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        HUGGING_FACE_ACCESS_TOKEN: ${{ secrets.HUGGING_FACE_ACCESS_TOKEN }}
       run: |
         uv run pytest --cov-report term-missing --cov=src tests/

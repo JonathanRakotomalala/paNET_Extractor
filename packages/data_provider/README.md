@@ -8,8 +8,8 @@
 ## The data-provider make requests to Openaire's search products or DataCite api to extract data from a doi 
 ### Usage
 
-> To make requests to OpenAire's API it needs the <a href="https://requests.readthedocs.io/en/latest/"> requests</a> library and requires refresh access token from openaire (expires after 1 month) and a mail for the user agent, to be passed onto environment variables for openaire requests:
-OPEN_AIRE_REFRESH_ACCESS_TOKEN and USER_AGENT_MAIL
+> To make requests to OpenAire's API it requires refresh access token from openaire (expires after 1 month) and an e-mail for the user agent (they need to be passed into environment variables): 
+`OPEN_AIRE_REFRESH_ACCESS_TOKEN` and `USER_AGENT_MAIL`
 
 
 ```console
@@ -17,19 +17,26 @@ OPEN_AIRE_REFRESH_ACCESS_TOKEN and USER_AGENT_MAIL
 #Initialize openaire requests
 > DataProvider()
 ```   
-### get_registry
+#### get_registry
+Uses <a href="https://www.doi.org/doi-handbook/HTML/which-ra_-service.html">which RA? service</a> to get the registry agency from a doi
 ```console
->DataProvider.get_registry("")
+>DataProvider.get_registry("10.1038/s41563-023-01669-z")
 ```
 
 #### call_open_aire
+For doi registered at Crossref, we make requests at openaire search products api to extract abstract
 ```console
 > DataProvider.call_open_aire("10.1038/s41563-023-01669-z")
 ```
 
-### call_datacite
+#### call_datacite
+For doi registered at DataCite, we make requests at openaire search products api to extract abstract
+```console
+> DataProvider.call_datacite("10.1038/s41563-023-01669-z")
+```
 
 #### get_abstract_from_doi
+Calls for OpenAire or DataCite to extract abstract from a doi
 ```console
 > abstract = Data_provider.get_abstract_from_doi("10.1038/s41563-023-01669-z")
 > print(abstracts)

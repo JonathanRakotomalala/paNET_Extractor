@@ -33,7 +33,7 @@ def test_load_ontology(mocker):
     mock_ontology.classes.return_value = [mock_class]
 
     url_link = "https://data.bioontology.org/ontologies/PANET/submissions/26/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb"
-    results = Ontology.getting_ontology()
+    results = Ontology.fetch_ontology()
 
     mock_get_ontology.assert_called_once_with(url_link)
     mock_ontology.load.assert_called_once()
@@ -49,14 +49,14 @@ def test_ontology_empty(mocker):
     mocker.patch("owlready2.get_ontology", return_value=mock)
 
     with pytest.raises(EmptyOntologyError):
-        Ontology.getting_ontology()
+        Ontology.fetch_ontology()
 
 
 def test_fail_path_is_invalid(mocker):
     mocker.patch("owlready2.get_ontology", side_effect=FileNotFoundError)
 
     with pytest.raises(OntologyNotFoundError):
-        Ontology.getting_ontology()
+        Ontology.fetch_ontology()
 
 
 def test_failed_to_load_ontology(mocker):
@@ -65,4 +65,4 @@ def test_failed_to_load_ontology(mocker):
     mocker.patch("owlready2.get_ontology", return_value=mock)
 
     with pytest.raises(EmptyOntologyError):
-        Ontology.getting_ontology()
+        Ontology.fetch_ontology()

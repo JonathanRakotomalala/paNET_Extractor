@@ -10,20 +10,21 @@ class MatchMapper:
     Makes the matching and the mapping of techniques using normalizing distance function from rapidfuzz
     """
 
-    def my_matcher(input: str, terms, n=10):
+    def my_matcher(
+        input, terms, algorithm=rapidfuzz.distance.Levenshtein.normalized_distance, n=10
+    ):
         """matches the input to a term inside the list of terms
 
         Args :
             input: a string
             terms: a list of terms
+            algorithm: a rapidfuzz function (normalized distance)
             n: number of matches (default to 10)
         Returns :
             the term that have the highest proximity or None
 
         """
-        my_func = (
-            rapidfuzz.distance.Levenshtein.normalized_distance
-        )  # the rapidfuzz distance function to use for the matching
+        my_func = algorithm  # the rapidfuzz distance function to use for the matching
 
         minimum = MAXIMUM_INTEGER
         distance_found = minimum
@@ -87,20 +88,24 @@ class MatchMapper:
 
         return n_first
 
-    def map_to_panet(my_json, n=1):
+    def map_to_panet(my_json, algorithm="Levenshtein distance", n=1):
         """
         Map the techniques to the paNET ontology
         Args :
             my_json: a json
+            algorithm: a string that represent the algorithm used (default to levenshtein)
             n:number of matches to show (default 1)
         Returns :
             a list of the technics in the json and it nearest terms in paNET
         """
-        my_ontology = Ontology.getting_ontology()
+        my_ontology = Ontology.fetch_ontology()
         my_list = []
+        my_func = rapidfuzz.distance.Levenshtein.normalized_distance
+        if algorithm == "indel distance":
+            my_func = rapidfuzz.distance.Indel.normalized_distance
 
         for i in my_json["techniques"]:
-            results = MatchMapper.my_matcher(i, my_ontology)["n_first"]
+            results = MatchMapper.my_matcher(i, my_ontology, my_func)["n_first"]
             if results is not None:
                 if n != 1:
                     my_list.append({"inText": i, "inPaNET": results.slice(n)})

@@ -10,9 +10,20 @@ and [pip](https://pip.pypa.io/en/stable/) to install new packages.
 
 Execute `uv sync` to install all dependencies defined in the project. <br>
 3 environment variables are required:
-- ACCESS_TOKEN: Huggingface access token
-- OPEN_AIRE_REFRESH_ACCESS_TOKEN: OpenAire refresh access token 
-- USER_AGENT_MAIL: An e-mail
+- HUGGING_FACE_ACCESS_TOKEN: Huggingface access token (more info here)
+- OPEN_AIRE_REFRESH_ACCESS_TOKEN: OpenAire refresh access token (more info here)
+- USER_AGENT_MAIL: An e-mail (more info here)
+
+### Docker 
+There is a dockerfile to build a docker image : 
+```console
+docker build path_to_the_build_context 
+```
+
+To run a container : 
+```console
+docker run -p 8080:80 id_or_name_of_image
+```
 
 ## Project structure
 
