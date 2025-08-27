@@ -4,7 +4,13 @@
 <img src="https://img.shields.io/badge/python->=3.10-blue"> 
 </a>
 </p>
-The techniques_extractor makes inference to Llm to extract techniques as it is written from raw text
+The techniques_extractor makes inference to Llm to extract techniques as it is written from raw text.
+It uses <a href="https://huggingface.co/docs/transformers/index">transformers</a> from huggingface to load llm models into the cache to be used at each inference. 
+An alternative is <a href="https://docs.vllm.ai/en/latest/index.html">vLLM</a> and here are some usefull links: 
+
+1. installation : https://docs.vllm.ai/en/stable/getting_started/installation/index.html 
+2. inference : https://docs.vllm.ai/en/stable/examples/index.html
+3. deployment : https://docs.vllm.ai/en/latest/deployment/docker.html
 
 ### Usage
 

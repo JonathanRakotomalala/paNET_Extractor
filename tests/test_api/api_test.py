@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 from src.panetextractor.api.main import app
 import pytest
+import time
 
 
 def test_get_techniques_success():
@@ -99,7 +100,7 @@ def test_rate_time_limit_and_retried_before_given_time(mock_rate_limit_error_ope
             json={"dois": ["12345678910"]},
             headers={"Content-type": "application/json", "Accept": "application/json"},
         )
-        # time.sleep(1)
+        time.sleep(1)
         response = client.post(
             url="http://127.0.0.1:8000/dois_to_techniques/",
             json={"dois": ["12345678910"]},

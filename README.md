@@ -15,15 +15,14 @@ Execute `uv sync` to install all dependencies defined in the project. <br>
 - USER_AGENT_MAIL: An e-mail (more info here)
 
 ### Docker 
-There is a dockerfile to build a docker image : 
-```console
-docker build path_to_the_build_context 
-```
+There is a dockerfile to build a docker image of the project : 
 
-To run a container : 
+To build and run a container : 
 ```console
-docker run -p 8080:80 id_or_name_of_image
+> docker build -t name_of_image path_to_the_build_context 
+> docker run -p 8000:80 id_or_name_of_image
 ```
+API docs at https://localhost:8000/doc_elem#
 
 ## Project structure
 
@@ -34,7 +33,7 @@ docker run -p 8080:80 id_or_name_of_image
 
 > In the `src`:
 1. `panetextractor`: 
-    1. `api`: the endpoints and the api ddocs settings
+    1. `api`: the endpoints and the api docs settings
     2. `orchestrator`: orchestrate all the operations for techniques extraction
 2. `service_evaluation`: a script to evaluate the service with a list (length=3) of random DOIs. Results<a href="\tests\data\results.json"> here</a>
 
