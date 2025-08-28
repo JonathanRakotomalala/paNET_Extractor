@@ -5,7 +5,7 @@
 </a>
 </p>
 
-## The data-provider make requests to Openaire's search products or DataCite api to extract data from a doi 
+## The data-provider sends requests to Openaire's search products or DataCite api to extract data from a doi 
 ### Usage
 
 > To make requests to OpenAire's API it requires refresh access token from openaire (expires after 1 month) and an e-mail for the user agent (they need to be passed into environment variables): 
