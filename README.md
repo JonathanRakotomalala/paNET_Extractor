@@ -22,6 +22,10 @@ To build and run a container :
 > docker build -t name_of_image path_to_the_build_context 
 > docker run -p 8000:80 id_or_name_of_image
 ```
+or 
+```console
+docker compose up
+```
 API docs at https://localhost:8000/doc_elem#
 
 ## Project structure
