@@ -4,9 +4,13 @@
 <img src="https://img.shields.io/badge/python->=3.10-blue"> 
 </a>
 </p>
-The techniques_extractor makes inference to Llm to extract techniques as it is written from raw text.
-It uses <a href="https://huggingface.co/docs/transformers/index">transformers</a> from huggingface to load llm models into the cache to be used at each inference. 
-An alternative is <a href="https://docs.vllm.ai/en/latest/index.html">vLLM</a> and here are some usefull links: 
+The techniques_extractor makes inference to Llm to extract techniques as it is written from raw text. <br>
+It uses <a href="https://huggingface.co/docs/transformers/index">transformers</a> from huggingface to load llm models into the cache (model Llama 3.2-3B-Instruct size is 5.99GB). 
+An alternative is <a href="https://docs.vllm.ai/en/latest/index.html">vLLM</a>,
+With vLlm the Llm inference can be handled separately from the project. <br>
+The vLLM process can run inside a container (e.g., Docker) or a VM to ensure it has all the necessary resources and isolation from the main application.
+It can be deployed on dedicated hardware (e.g., GPUs or TPUs) for optimal performance, without sharing resources with the main application.
+here are some usefull links: 
 
 1. installation : https://docs.vllm.ai/en/stable/getting_started/installation/index.html 
 2. inference : https://docs.vllm.ai/en/stable/examples/index.html
@@ -14,7 +18,7 @@ An alternative is <a href="https://docs.vllm.ai/en/latest/index.html">vLLM</a> a
 
 ### Usage
 
-> Requires a hugging_face token access for the llm model (here it's the Llama-3.2-3B-Instruct from huggingface) :  HUGGING_FACE_ACCESS_TOKEN
+> Requires a huggingface token access for the llm model (here it's the Llama-3.2-3B-Instruct from huggingface) to be passed in environment variable named HUGGING_FACE_ACCESS_TOKEN
 
 ```console 
 > from techniques_extractor import Llm
