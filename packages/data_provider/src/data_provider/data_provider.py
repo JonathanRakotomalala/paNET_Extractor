@@ -97,13 +97,8 @@ class DataProvider:
             The json response containing all informations
         Raises: AbstractImportError
         """
-        url_link = "https://datacite.org/dois?query=doi:" + doi
-        response = requests.get(
-            url_link,
-            headers={
-                "User-Agent": f"PaNetExtractor/1.0.0 ({DataProvider.USER_AGENT_MAIL})",
-            },
-        )
+        url_link = "https://api.datacite.org/dois?query=doi:" + doi
+        response = requests.get(url_link)
         logger.debug(response.json())
         match response.status_code:
             case 200:
@@ -155,7 +150,6 @@ class DataProvider:
                     waiting_time = int(response.headers["Retry-After"])
                 raise RateLimitError(waiting_time, "OpenAire: Too many requests")
             case _:
-                print(response.status_code)
                 raise AbstractImportError(
                     f"Unable to extract abstract from DOI due to openaire: Http error {response.status_code}"
                 )

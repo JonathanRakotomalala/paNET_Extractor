@@ -7,6 +7,7 @@ from packages.panet_technique_matcher.src.panet_technique_matcher.ontology_impor
 from packages.data_provider.src.data_provider import (
     RateLimitError,
     NoPublicationFoundError,
+    AbstractImportError,
 )
 import time
 import math
@@ -89,7 +90,11 @@ class Orchestrator:
                 my_list = []
                 for _, i in doi_list:
                     for j in i:
-                        result = DataProvider.get_abstract_from_doi(j)
+                        try:
+                            result = DataProvider.get_abstract_from_doi(j)
+                        except AbstractImportError as e:
+                            result = e.message
+                            techniques = []
                         # first_result = OpenAire.get_abstract_from_doi(j)
                         # result = re.sub(r'<.*?>', ' ',first_result )
                         if result == "No abstract available":
