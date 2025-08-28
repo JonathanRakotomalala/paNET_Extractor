@@ -1,0 +1,10 @@
+version: "3.2"
+services:
+        panet_extractor:
+                build: .
+                ports:
+                        - 8000:80
+                environment:
+                        USER_AGENT_MAIL: your_email
+                        OPEN_AIRE_REFRESH_ACCESS_TOKEN: your_open_aire_token
+                        HUGGING_FACE_ACCESS_TOKEN: your_huggingface_token
